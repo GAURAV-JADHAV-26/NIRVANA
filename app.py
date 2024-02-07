@@ -18,7 +18,7 @@ TOKEN_URL = 'https://accounts.spotify.com/api/token'
 @app.route('/')
 def index():
     auth_url = f'{AUTHORIZE_URL}?client_id={CLIENT_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={SCOPE}'
-    return render_template('index.html', auth_url=auth_url)
+    return render_template('./index1.html', auth_url=auth_url)
 
 @app.route('/callback')
 def callback():

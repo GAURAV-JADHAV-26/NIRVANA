@@ -1,17 +1,28 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    justify-content: center;
+    background: url('../images/background.avif') no-repeat;
+    min-height: 100vh; /* Set the minimum height of the viewport to 100vh to fill the screen
     background-color: transparent; /* Set background color to transparent */
     background-size: cover; /* Cover the entire viewport */
-    background-repeat: no-repeat; /* Do not repeat the background image */
+
 }
 
 .container {
     max-width: 800px;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    height: 20%;
     margin: 0 auto;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent white background to the container */
+    padding: 20px 100px;
+    margin-left: 40%;
+    margin-top: 15%;
+    align-items: center;
+    z-index: 99;
+    background-color: rgba(255, 255, 255, 0.25); /* Add a semi-transparent white background to the container */
     border-radius: 20px; /* Add rounded corners to the container */
 }
 
