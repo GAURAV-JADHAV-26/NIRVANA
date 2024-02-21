@@ -37,19 +37,41 @@ def callback():
     session['access_token'] = token_info.get('access_token', None)
     return redirect('/genre')
 
+# @app.route('/genre')
+# def genre():
+#     access_token = session.get('access_token')
+#     if not access_token:
+#         return redirect('/')
+    
+#     headers = {'Authorization': f'Bearer {access_token}'}
+#     response = requests.get(GENRE_URL, headers=headers)
+#     if response.status_code == 200:
+#         genres = response.json().get('genres', [])
+#         return render_template('genre.html', genres=genres)
+#     else:
+#         return f"Failed to retrieve genre list from Spotify API: {response.text}"
+
+
+import os
+
 @app.route('/genre')
 def genre():
     access_token = session.get('access_token')
     if not access_token:
         return redirect('/')
-    
+
     headers = {'Authorization': f'Bearer {access_token}'}
     response = requests.get(GENRE_URL, headers=headers)
     if response.status_code == 200:
         genres = response.json().get('genres', [])
-        return render_template('genre.html', genres=genres)
+        # Add image filenames to the genre data
+        genre_data = [{'name': genre, 'image': f'genre_images/{genre.replace(" ", "_").lower()}.jpg'} for genre in genres]
+        return render_template('genre.html', genres=genre_data)
     else:
         return f"Failed to retrieve genre list from Spotify API: {response.text}"
+
+
+
 
 @app.route('/select_genres', methods=['POST'])
 def select_genres():
