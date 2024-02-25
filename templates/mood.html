@@ -3,14 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Mood Playlists</title>
+    <title>Available Mood Keywords</title>
+    <style>
+        /* Styles for the cards */
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            margin: 10px;
+            width: 189px;
+            height: 240px;
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            background-color: #f9f9f9; /* Fallback background color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box shadow */
+        }
+        .card:hover {
+            border-color: #777;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+            transform: scale(1.05); /* Scale up on hover */
+        }
+        .card.selected {
+            background-color: rgba(255, 255, 255, 0.2); /* Light overlay for selected card */
+        }
+        .card-content {
+            opacity: 1; /* Always show the card content */
+            border-radius: 8px;
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
+            color: white;
+            padding: 5px;
+            box-sizing: border-box;
+            border-radius: 8px; /* Add border-radius to round the corners */
+            transition: background-color 0.3s; /* Add transition for background color */
+            text-transform: capitalize; /* Capitalize the text */
+        }
+        .card:hover .card-content {
+            background-color: #1ED760; /* Change background color of text on card hover */
+            color: black; /* Change text color to black on hover */
+        }
+        .checkmark {
+            position: absolute;
+            top: 10px; /* Shift to top */
+            right: 10px; /* Shift to right */
+            height: 30px;
+            width: 30px;
+            background-color: transparent; /* Remove circle background */
+            display: none; /* Hide checkmark by default */
+            transition: all 0.3s ease; /* Add transition effect */
+        }
+        .checkbox-container {
+            vertical-align: top; /* Add this line to align elements at the top */
+        }
+        .checkbox-container input:checked + .checkmark {
+            display: block; /* Display checkmark when input is checked */
+        }
+        .checkmark:after {
+            content: '\2665'; /* Unicode for checkmark symbol */
+            font-size: 30px; /* Adjust font size */
+            color: #1ED760; /* Green color */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the checkmark symbol */
+        }
+        .checkmark:hover {
+            transform: scale(1.2); /* Scale up on hover */
+        }
+        /* Styles for the submit button */
+        input[type="submit"] {
+            display: block;
+            margin: 20px auto; /* Center the button horizontally */
+            padding: 10px 20px;
+            background-color: #1ED760; /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        /* Remove hover effect */
+        input[type="submit"]:hover {
+            background-color: #1ED760; /* Keep the same green color on hover */
+        }
+    </style>
 </head>
 <body>
-    <h1>Spotify Mood Playlists</h1>
-    <form action="/select_moods" method="post">
-        {% for mood in mood_names %}
-            <input type="checkbox" name="selected_moods" value="{{ mood }}">{{ mood }}<br>
-        {% endfor %}
+    <h1 class="mood-keywords">Available Mood Keywords</h1>
+    <hr/>
+    <form action="/select_keywords" method="post">
+        <div id="keyword-cards">
+            <!-- Cards with selectable keywords will be dynamically generated here -->
+            {% for keyword in keywords %}
+            <label class="checkbox-container card">
+                <input type="checkbox" name="selected_keywords" value="{{ keyword }}" style="display: none;">
+                <span class="checkmark"></span>
+                <div class="card-content">{{ keyword }}</div>
+            </label>
+            {% endfor %}
+        </div>
         <input type="submit" value="Submit">
     </form>
 </body>

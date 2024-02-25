@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Music Genres</title>
+    <title>Available Music Genres</title>
     <style>
         /* Styles for the cards */
         .card {
@@ -33,9 +33,8 @@
             background-color: rgba(255, 255, 255, 0.2); /* Light overlay for selected card */
         }
         .card-content {
-            opacity: 0; /* Initially hide the card content */
+            opacity: 1; /* Always show the card content */
             border-radius: 8px;
-            transition: opacity 0.5s ease; /* Add transition for opacity */
             position: absolute;
             bottom: 10px;
             left: 0;
@@ -45,18 +44,22 @@
             padding: 5px;
             box-sizing: border-box;
             border-radius: 8px; /* Add border-radius to round the corners */
+            transition: background-color 0.3s; /* Add transition for background color */
+            text-transform: capitalize; /* Capitalize the text */
         }
         .card:hover .card-content {
-            opacity: 1; /* Show the card content on hover */
+            background-color: #1ED760; /* Change background color of text on card hover */
+            color: black; /* Change text color to black on hover */
         }
         .checkmark {
             position: absolute;
             top: 10px; /* Shift to top */
             right: 10px; /* Shift to right */
-            height: 25px;
-            width: 25px;
+            height: 30px;
+            width: 30px;
             background-color: transparent; /* Remove circle background */
             display: none; /* Hide checkmark by default */
+            transition: all 0.3s ease; /* Add transition effect */
         }
         .checkbox-container {
             vertical-align: top; /* Add this line to align elements at the top */
@@ -65,20 +68,23 @@
             display: block; /* Display checkmark when input is checked */
         }
         .checkmark:after {
-            content: '\2714'; /* Unicode for checkmark */
-            font-size: 25px;
-            color: cyan;
+            content: '\2665'; /* Unicode for heart symbol */
+            font-size: 30px; /* Increase font size */
+            color: #1ED760; /* Pink color */
             position: absolute;
-            top: 0;
-            right: 0;
-            transform: translate(50%, -50%); /* Adjust position */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the heart symbol */
+        }
+        .checkmark:hover {
+            transform: scale(1.2); /* Scale up on hover */
         }
         /* Styles for the submit button */
         input[type="submit"] {
             display: block;
             margin: 20px auto; /* Center the button horizontally */
             padding: 10px 20px;
-            background-color: #4CAF50; /* Green */
+            background-color: #1ED760; /* Green */
             border: none;
             color: white;
             text-align: center;
@@ -86,27 +92,30 @@
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s;
         }
+        /* Remove hover effect */
         input[type="submit"]:hover {
-            background-color: #45a049; /* Darker green on hover */
+            background-color: #1ED760; /* Keep the same green color on hover */
         }
     </style>
 </head>
 <body>
-    <h1>Spotify Music Genres</h1>
+    <h1 class="music-genres">Available Music Genres</h1>
+    <hr/>
     <form action="/select_genres" method="post">
         <div id="genre-cards">
             <!-- Cards with selectable genres and images will be dynamically generated here -->
             {% for genre in genres %}
-                <label class="checkbox-container card" style="background-image: url('{{ url_for('static', filename=genre['image']) }}')">
-                    <input type="checkbox" name="selected_genres" value="{{ genre['name'] }}" style="display: none;">
-                    <span class="checkmark"></span>
-                    <div class="card-content">{{ genre['name'] }}</div>
-                </label>
+            <label class="checkbox-container card" style="background-image: url('{{ url_for('static', filename=genre['image']) }}')">
+                <input type="checkbox" name="selected_genres" value="{{ genre['name'] }}" style="display: none;">
+                <span class="checkmark"></span>
+                <div class="card-content">{{ genre['name'] }}</div>
+            </label>
             {% endfor %}
         </div>
         <input type="submit" value="Submit">
     </form>
 </body>
 </html>
+
+

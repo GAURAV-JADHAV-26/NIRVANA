@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Search and Checkbox Example</title>
+</head>
+<body>
+    <h1>Artist Search and Checkbox Example</h1>
+    <input type="text" id="artistSearch" placeholder="Search for an artist">
+    <button onclick="searchArtist()">Search</button>
+    <div id="artistResults"></div>
+    
+    <h2>Select Artists</h2>
+    <div id="selectedArtists"></div>
+    <button onclick="saveArtists()">Save Artists</button>
+
+    <script>
+        // Array to store selected artists
+        const selectedArtistsArray = [];
+
+        function searchArtist() {
+            const searchTerm = document.getElementById('artistSearch').value;
+            fetch(`/search_artist?q=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const artistResults = document.getElementById('artistResults');
+                    artistResults.innerHTML = ''; // Clear previous results
+                    data.forEach(artist => {
+                        const artistDiv = document.createElement('div');
+                        artistDiv.innerHTML = `
+                            <label>
+                                <input type="checkbox" id="checkbox_${artist.id}" data-name="${artist.name}">
+                                <img src="${artist.image}" alt="${artist.name}" style="width: 100px; height: 100px;">
+                                <span>${artist.name}</span>
+                            </label>
+                        `;
+                        artistResults.appendChild(artistDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function saveArtists() {
+            // Get all selected artists and add them to the array
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedArtistsArray.push(checkbox.getAttribute('data-name'));
+            });
+
+            // Send the array of selected artists to the backend
+            fetch('/save_selected_artists', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ artists: selectedArtistsArray })
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Selected artists saved successfully.');
+                } else {
+                    console.error('Failed to save selected artists.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

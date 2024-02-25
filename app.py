@@ -1,5 +1,7 @@
-from flask import Flask, request, redirect, session, render_template
-import requests
+from flask import Flask, request, redirect, session, render_template, jsonify
+from spotipy.oauth2 import SpotifyClientCredentials
+from datetime import datetime
+import requests,base64,spotipy
 import os
 
 app = Flask(__name__)
@@ -10,10 +12,64 @@ CLIENT_SECRET = '96291925d7ec454e888a4254e5bd2808'
 REDIRECT_URI = 'http://127.0.0.1:8080/callback'
 SCOPE = 'user-read-email user-read-private'
 GENRE_URL = 'https://api.spotify.com/v1/recommendations/available-genre-seeds'
-#Getting list of moods from Spotify
 MOOD_URL = 'https://api.spotify.com/v1/browse/categories/mood/playlists'
 AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 TOKEN_URL = 'https://accounts.spotify.com/api/token'
+
+client_credentials_manager = SpotifyClientCredentials(client_id='81508673df21418787b14db997dd2936', client_secret='96291925d7ec454e888a4254e5bd2808')
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+
+now = datetime.now()
+current_hour = now.hour
+time_segment = ""
+
+if 6 <= current_hour < 12:
+    time_segment = "morning"
+elif 12 <= current_hour < 18:
+    time_segment = "afternoon"
+elif 18 <= current_hour < 22:
+    time_segment = "evening"
+else:
+    time_segment = "night"
+
+attributes = {
+    "morning": {"energy": [0.7, 1.0], "tempo": [100, 150], "danceability": [0.5, 1.0],
+                "acousticness": [0.0, 0.5], "loudness": [-20, -5], "instrumentalness": [0.0, 0.3]},
+    "afternoon": {"energy": [0.6, 0.8], "tempo": [90, 120], "danceability": [0.4, 0.8],
+                  "acousticness": [0.0, 0.5], "loudness": [-20, -5], "instrumentalness": [0.0, 0.3]},
+    "evening": {"energy": [0.4, 0.7], "tempo": [60, 100], "danceability": [0.3, 0.6],
+                "acousticness": [0.0, 0.5], "loudness": [-20, -5], "instrumentalness": [0.0, 0.3]},
+    "night": {"energy": [0.2, 0.5], "tempo": [30, 90], "danceability": [0.2, 0.5],
+              "acousticness": [0.0, 0.5], "loudness": [-20, -5], "instrumentalness": [0.0, 0.3]}
+}
+
+mood_keywords = [
+    "happy", "sad", "energetic", "relaxing", "uplifting", "chill", "party", "mellow", "romantic",
+    "melancholic", "exciting", "calm", "lively", "dreamy", "groovy", "reflective", "aggressive",
+    "serene", "peaceful", "joyful", "hopeful", "melancholy", "blissful", "sentimental", "intense",
+    "playful", "optimistic", "dramatic", "moody", "soothing", "bittersweet", "dark", "light",
+    "inspiring", "nostalgic", "empowering", "whimsical", "ethereal", "triumphant", "mysterious",
+    "enigmatic", "pensive", "tranquil", "enthusiastic", "euphoric", "thoughtful", "suspenseful",
+    "ecstatic", "brooding"
+]
+def get_access_token():
+    url = 'https://accounts.spotify.com/api/token'
+    headers = {'Authorization': 'Basic ' + base64.b64encode(f'{CLIENT_ID}:{CLIENT_SECRET}'.encode()).decode()}
+    data = {'grant_type': 'client_credentials'}
+    response = requests.post(url, headers=headers, data=data)
+    return response.json()['access_token']
+def search_artist(query):
+    access_token = get_access_token()
+    url = f'https://api.spotify.com/v1/search?q={query}&type=artist'
+    headers = {'Authorization': f'Bearer {access_token}'}
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    artists = []
+    for artist in data['artists']['items']:
+        images = artist['images']
+        image_url = images[0]['url'] if images else ''  # Use the first image if available
+        artists.append({'id': artist['id'], 'name': artist['name'], 'image': image_url})
+    return artists
 
 @app.route('/')
 def index():
@@ -36,24 +92,6 @@ def callback():
     # Storing access token in session
     session['access_token'] = token_info.get('access_token', None)
     return redirect('/genre')
-
-# @app.route('/genre')
-# def genre():
-#     access_token = session.get('access_token')
-#     if not access_token:
-#         return redirect('/')
-    
-#     headers = {'Authorization': f'Bearer {access_token}'}
-#     response = requests.get(GENRE_URL, headers=headers)
-#     if response.status_code == 200:
-#         genres = response.json().get('genres', [])
-#         return render_template('genre.html', genres=genres)
-#     else:
-#         return f"Failed to retrieve genre list from Spotify API: {response.text}"
-
-
-import os
-
 @app.route('/genre')
 def genre():
     access_token = session.get('access_token')
@@ -70,9 +108,6 @@ def genre():
     else:
         return f"Failed to retrieve genre list from Spotify API: {response.text}"
 
-
-
-
 @app.route('/select_genres', methods=['POST'])
 def select_genres():
     selected_genres = request.form.getlist('selected_genres')
@@ -80,24 +115,26 @@ def select_genres():
     return redirect('/mood')
 @app.route('/mood')
 def mood():
-    access_token = session.get('access_token')
-    if not access_token:
-        return redirect('/')
-    
-    mood_names = []
+    return render_template('mood.html', keywords=mood_keywords)
 
-    headers = {'Authorization': f'Bearer {access_token}'}
-    next_url = MOOD_URL
-    while next_url:
-        response = requests.get(next_url, headers=headers, params={'limit': 50})#Check if it can be randomised so that the next 50 will be different
-        if response.status_code == 200:
-            data = response.json()
-            mood_items = data.get('playlists', {}).get('items', [])
-            mood_names.extend([mood['name'] for mood in mood_items])
-            next_url = data.get('playlists', {}).get('next')
-        else:
-            return f"Failed to retrieve mood playlists from Spotify API: {response.text}"
+@app.route('/select_keywords', methods=['POST'])
+def select_keywords():
+    selected_keywords = request.form.getlist('selected_keywords')
+    session['selected_keywords'] = selected_keywords
+    return redirect('/artist')
 
-    return render_template('mood.html', mood_names=mood_names)
+@app.route('/artist')
+def artist():
+    return render_template('artist.html')
+@app.route('/search_artist')
+def search_artist_endpoint():
+    query = request.args.get('q', '')
+    return jsonify(search_artist(query))
+
+@app.route('/save_selected_artists', methods=['POST'])
+def save_selected_artists():
+    data = request.json
+    session['selected_artists'] = data['artists']
+    return jsonify(success=True)
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
