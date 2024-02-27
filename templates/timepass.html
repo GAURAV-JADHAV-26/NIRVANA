@@ -5,24 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artist Search and Checkbox Example</title>
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+        body {
+
+            font-family: "Kode Mono", monospace;
+            background-image: url('../static/images/back.jpg');
+            background-size: cover;
+            background-position: auto;
+
+            color: #fff;
+            margin: 0; /* Add margin to body to prevent default margin */
+            padding: 0; /* Add padding to body to prevent default padding */
+        }
+
         /* Styles for the container */
-
-
-
         .container {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            padding: 20px;
-            background-color: #444;
+            min-height: 100vh;
+        }
+
+        .search-container {
+            margin-top: 20px; /* Add top margin for spacing */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-family: "Kode Mono", monospace;
+            font-size: 1.05rem;
+            text-align: center;
+            
+            
+        }
+
+        #artistSearch {
+            margin-right: 10px; /* Add margin between search bar and button */
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: 200px; /* Set the width of the search input */
+            background-color: rgba(0, 0, 0, 0.5); /* Set the background as semi transparent*/
             color: #fff;
             font-family: "Kode Mono", monospace;
             font-weight: 700;
-            margin: 0;
-            padding: 0;
+            font-size: 1.05rem;
+            text-align: center;
+                min-height: 3vh;
+                min-width: 10vw;
+
+
         }
-        /* Styles for the card */
+
         .card {
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            margin: 10px;
+            width: 200px;
+            height: 240px;
+            text-align: center;
+            background-size: cover; /* Set the background-size to cover */
+            background-position: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            background-color: #222;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .selected::after {
+            content: '\2665'; /* Unicode character for check mark */
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #1ED760;
+            font-size: 24px;
+        }
+
+        /* Styles for the search input and button */
+        #artistSearch {
+            margin-right: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: 200px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-family: "Kode Mono", monospace;
+            font-weight: 700;
+            font-size: 1.05rem;
+            text-align: center;
+            min-height: 40px; /* Adjust the height here */
+            line-height: 1; /* Ensure the height is applied correctly */
+            min-width: 14vw;
+        }
+
+        .save-artists:hover {
+            border: 2px solid black;
+        }
+
+        #searchButton {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #1ed760;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            height: 40px; /* Adjust the height to match the search bar */
+        }
+
+        #searchButton:hover {
+            border: 2px solid black;
+            background-color:#1ed760;
+            
+        }
+
+        /* Styles for the searched cards */
+        #artistResults {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        #artistResults .card {
             border: 1px solid #ddd;
             border-radius: 15px;
             margin: 10px;
@@ -38,12 +148,12 @@
             background-color: #222;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .card:hover {
+        #artistResults .card:hover {
             border-color: #777;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             transform: scale(1.05);
         }
-        .card-content {
+        #artistResults .card-content {
             opacity: 1;
             border-radius: 8px;
             position: absolute;
@@ -58,7 +168,7 @@
             transition: background-color 0.3s;
             text-transform: capitalize;
         }
-        .card:hover .card-content {
+        #artistResults .card:hover .card-content {
             background-color: #1ED760;
             color: black;
         }
@@ -80,133 +190,129 @@
             background-color: #1ED760;
         }
 
+        .music-genres {
+           font-size: 3rem;
+            
+            font-weight: bold;
+            text-align: center;
+        }
 
-
-        * {
-            background-color: #444;
-            font-family: "Kode Mono", monospace;
-        }
-        
-        
-        .container {
-            padding: 20px;
-            background-color: #444;
-            color: #fff;
-            font-family: "Kode Mono", monospace;
-            font-weight: 700;
-            margin: 0;
-            padding: 0;
-        }
-        /* Styles for the search input and button */
-        #artistSearch {
-            margin-bottom: 10px;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        #artistResults {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        #artistResults div {
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        /* Styles for the selected artists */
-        #selectedArtists {
-            margin-top: 20px;
-        }
-        /* Styles for the submit button */
-        button {
-            padding: 10px 20px;
-            background-color: #1ED760;
+        .save-artists {
+            background-color: #1ed760;
             border: none;
             color: white;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
         }
-        button:hover {
-            background-color: #1ED760;
-        }
+
+
     </style>
 </head>
 <body>
-    <div class="container">    
-    <h1 class="music-genres">Artist Search and Checkbox Example</h1>
-    <input type="text" id="artistSearch" placeholder="Search for an artist">
-    <button onclick="searchArtist()">Search</button>
-    <div class="container" id="artistResults">
-        <!-- Cards with artist information will be dynamically generated here -->
+    <div class="container" id="container">
+        <h1 class="music-genres">Artist Search and Checkbox Example</h1>
+        <div class="search-container">
+            <input type="text" id="artistSearch" placeholder="Search for an artist">
+            <button id="searchButton" onclick="searchArtist()">Search</button>
+        </div>
+        <div id="artistResults">
+            <!-- Cards with artist information will be dynamically generated here -->
+        </div>
+        <div id="selectedArtists" style="display: none;"></div>
+        <button id="saveArtistsButton" onclick="saveArtists()" class="save-artists" style="display: none;">Save Artists</button>
+
+
+
+
+
     </div>
-    
-    
-    <h2>Select Artists</h2>
-    <div id="selectedArtists"></div>
-    <button onclick="saveArtists()">Save Artists</button>
-</div>
-
-    
-
 
     <script>
-        // Function to search for artists
-        function searchArtist() {
-            const searchTerm = document.getElementById('artistSearch').value;
-            // Fetch data based on the search term
-            fetch(`/search_artist?q=${encodeURIComponent(searchTerm)}`)
-                .then(response => response.json())
-                .then(data => {
-                    const artistResults = document.getElementById('artistResults');
-                    artistResults.innerHTML = ''; // Clear previous results
-                    // Iterate over the data and create cards for each artist
-                    data.forEach(artist => {
-                        const card = document.createElement('div');
-                        card.classList.add('card');
-                        card.innerHTML = `
-                            <label>
-                                <input type="checkbox" id="checkbox_${artist.id}" data-name="${artist.name}">
-                                <img src="${artist.image}" alt="${artist.name}" style="width: 100px; height: 100px;">
-                                <div class="card-content">${artist.name}</div>
-                            </label>
-                        `;
-                        artistResults.appendChild(card);
+
+
+
+
+        
+    // Function to search for artists
+    function searchArtist() {
+        const searchTerm = document.getElementById('artistSearch').value;
+        // Fetch data based on the search term
+        fetch(`/search_artist?q=${encodeURIComponent(searchTerm)}`)
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('container');
+                container.style.alignItems = 'flex-start'; // Align items to the top
+                const artistResults = document.getElementById('artistResults');
+                artistResults.innerHTML = ''; // Clear previous results
+                // Iterate over the data and create cards for each artist
+                data.forEach(artist => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.style.backgroundImage = `url(${artist.image})`; // Set background image
+                    card.innerHTML = `
+                        <div class="card-content">${artist.name}</div>
+                    `;
+                    card.addEventListener('click', function() {
+                        toggleSelection(card);
                     });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                    artistResults.appendChild(card);
                 });
-        }
-
-        // Function to save selected artists
-        function saveArtists() {
-            const selectedArtistsArray = [];
-            // Get all selected artists and add them to the array
-            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-                selectedArtistsArray.push(checkbox.getAttribute('data-name'));
-            });
-
-            // Send the array of selected artists to the backend
-            fetch('/save_selected_artists', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ artists: selectedArtistsArray })
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Selected artists saved successfully.');
-                } else {
-                    console.error('Failed to save selected artists.');
-                }
+                // Check if any card is selected and show the save button accordingly
+                checkSelectedArtists();
             })
             .catch(error => {
                 console.error('Error:', error);
             });
+    }
+
+    // Function to toggle selection of artists
+    function toggleSelection(card) {
+        card.classList.toggle('selected');
+        // Check if any card is selected and show the save button accordingly
+        checkSelectedArtists();
+    }
+
+    // Function to check if any card is selected and show the save button accordingly
+    function checkSelectedArtists() {
+        const saveButton = document.getElementById('saveArtistsButton');
+        const selectedCards = document.querySelectorAll('.card.selected');
+        if (selectedCards.length > 0) {
+            saveButton.style.display = 'block';
+        } else {
+            saveButton.style.display = 'none';
         }
+    }
+
+    // Function to save selected artists
+    function saveArtists() {
+        const selectedArtistsArray = [];
+        // Get all selected artists and add them to the array
+        document.querySelectorAll('.card.selected').forEach(card => {
+            const artistName = card.querySelector('.card-content').textContent;
+            selectedArtistsArray.push(artistName);
+        });
+
+        // Send the array of selected artists to the backend
+        fetch('/save_selected_artists', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ artists: selectedArtistsArray })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Selected artists saved successfully.');
+            } else {
+                console.error('Failed to save selected artists.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+
     </script>
 </body>
 </html>

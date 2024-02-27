@@ -7,8 +7,8 @@ import os
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
-CLIENT_ID = '81508673df21418787b14db997dd2936'
-CLIENT_SECRET = '96291925d7ec454e888a4254e5bd2808'
+CLIENT_ID = '1b1b24fc94f2465f92cf10b64d1317da'
+CLIENT_SECRET = 'c88f8847d6ef4a60b8c7003318867932'
 REDIRECT_URI = 'http://127.0.0.1:8080/callback'
 SCOPE = 'user-read-email user-read-private'
 GENRE_URL = 'https://api.spotify.com/v1/recommendations/available-genre-seeds'
@@ -16,7 +16,7 @@ MOOD_URL = 'https://api.spotify.com/v1/browse/categories/mood/playlists'
 AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 TOKEN_URL = 'https://accounts.spotify.com/api/token'
 
-client_credentials_manager = SpotifyClientCredentials(client_id='81508673df21418787b14db997dd2936', client_secret='96291925d7ec454e888a4254e5bd2808')
+client_credentials_manager = SpotifyClientCredentials(client_id='1b1b24fc94f2465f92cf10b64d1317da', client_secret='c88f8847d6ef4a60b8c7003318867932')
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 now = datetime.now()
