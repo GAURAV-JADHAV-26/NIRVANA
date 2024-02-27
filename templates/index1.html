@@ -8,27 +8,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        .nlogo {
+            width: 50px; /* Adjust the width as needed */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h2 class="logo btnLogin-popup">LOGO</h2>
+        <h2 class="logo btnLogin-popup">
+            <img src="../static/images/logo1.jpg" alt="Logo" class="nlogo">
+        </h2>
         <nav class="navigation">
-
             <a href="#" target="_blank">About Us</a>
-
         </nav>
     </header>
-
-
-
-
-
 
     <div class="container">
         <h1>
             WELCOME TO NIRVANA
         </h1>
-
         <p class="quote">Click the button below to connect to Spotify:</p>
         <a href="{{ auth_url }}" class="btn">
             <img src="../static/images/Spotify_Logo.png" alt="Spotify Logo" class="spotify-logo">

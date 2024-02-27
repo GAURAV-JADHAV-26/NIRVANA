@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artist Search and Checkbox Example</title>
     <style>
-
-        * {
-            background-color: #444;
-        }
         /* Styles for the container */
+
+
+
         .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             padding: 20px;
             background-color: #444;
             color: #fff;
@@ -19,38 +21,8 @@
             margin: 0;
             padding: 0;
         }
-
-
+        /* Styles for the card */
         .card {
-            border: 1px solid #ddd;
-            border-radius: 15px;
-            margin: 10px;
-            width: 200px;
-            height: 240px;
-            text-align: center;
-            background-size: cover; /* Set the background-size to cover */
-            background-position: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            background-color: #222;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-        /* Styles for the search input and button */
-        #artistSearch {
-            margin-bottom: 10px;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-        /* Styles for the searched cards */
-        #artistResults {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        #artistResults .card {
             border: 1px solid #ddd;
             border-radius: 15px;
             margin: 10px;
@@ -66,12 +38,12 @@
             background-color: #222;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        #artistResults .card:hover {
+        .card:hover {
             border-color: #777;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             transform: scale(1.05);
         }
-        #artistResults .card-content {
+        .card-content {
             opacity: 1;
             border-radius: 8px;
             position: absolute;
@@ -86,7 +58,7 @@
             transition: background-color 0.3s;
             text-transform: capitalize;
         }
-        #artistResults .card:hover .card-content {
+        .card:hover .card-content {
             background-color: #1ED760;
             color: black;
         }
@@ -107,21 +79,77 @@
         button:hover {
             background-color: #1ED760;
         }
+
+
+
+        * {
+            background-color: #444;
+            font-family: "Kode Mono", monospace;
+        }
+        
+        
+        .container {
+            padding: 20px;
+            background-color: #444;
+            color: #fff;
+            font-family: "Kode Mono", monospace;
+            font-weight: 700;
+            margin: 0;
+            padding: 0;
+        }
+        /* Styles for the search input and button */
+        #artistSearch {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        #artistResults {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        #artistResults div {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        /* Styles for the selected artists */
+        #selectedArtists {
+            margin-top: 20px;
+        }
+        /* Styles for the submit button */
+        button {
+            padding: 10px 20px;
+            background-color: #1ED760;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #1ED760;
+        }
     </style>
 </head>
 <body>
     <div class="container">    
-        <h1 class="music-genres">Artist Search and Checkbox Example</h1>
-        <input type="text" id="artistSearch" placeholder="Search for an artist">
-        <button onclick="searchArtist()">Search</button>
-        <div id="artistResults">
-            <!-- Cards with artist information will be dynamically generated here -->
-        </div>
-        
-        <h2>Select Artists</h2>
-        <div id="selectedArtists"></div>
-        <button onclick="saveArtists()">Save Artists</button>
+    <h1 class="music-genres">Artist Search and Checkbox Example</h1>
+    <input type="text" id="artistSearch" placeholder="Search for an artist">
+    <button onclick="searchArtist()">Search</button>
+    <div class="container" id="artistResults">
+        <!-- Cards with artist information will be dynamically generated here -->
     </div>
+    
+    
+    <h2>Select Artists</h2>
+    <div id="selectedArtists"></div>
+    <button onclick="saveArtists()">Save Artists</button>
+</div>
+
+    
+
 
     <script>
         // Function to search for artists
@@ -178,11 +206,6 @@
             .catch(error => {
                 console.error('Error:', error);
             });
-        }
-
-        // Function to redirect to '/hey' route
-        function redirectToHey() {
-            window.location.href = '/connector';
         }
     </script>
 </body>
