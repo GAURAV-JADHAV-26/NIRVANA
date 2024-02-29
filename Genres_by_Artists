@@ -1,0 +1,82 @@
+from spotipy.oauth2 import SpotifyClientCredentials
+from flask import Flask, session
+import spotipy
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+
+# Initialize Spotify API client with your credentials
+client_credentials_manager = SpotifyClientCredentials(client_id='1b1b24fc94f2465f92cf10b64d1317da', 
+                                                      client_secret='c88f8847d6ef4a60b8c7003318867932')
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+
+def find_tracks_for_combinations(genres, artists, num_tracks=20):
+    all_artist_genres = set()
+    all_genres = set(genres)
+    artists_not_performing_any_genre = []
+    genres_performed_by_no_artists = []
+    GenAr = {}
+
+    # Iterate through the artists to find their performed genres
+    for artist in artists:
+        artist_genres = get_artist_genres(artist)
+        if not artist_genres:
+            artists_not_performing_any_genre.append(artist)
+            continue
+        all_artist_genres.update(artist_genres)
+
+    # Iterate through the genres to check if any genre is not performed by any artist
+    for genre in genres:
+        if genre not in all_artist_genres:
+            genres_performed_by_no_artists.append(genre)
+
+    
+
+    # Iterate through each genre and artist to fetch track IDs
+    for genre in genres:
+        for artist in artists:
+            track_ids = fetch_track_ids(genre, artist, num_tracks)
+            if track_ids:
+                # Store the track IDs in the dictionary GenAr
+                GenAr.setdefault(genre, {}).setdefault(artist, []).extend(track_ids)
+
+                # Print the names of the tracks
+                for track_id in track_ids:
+                    track_name = get_track_name(track_id)
+                    print(f"Track Name: {track_name}")
+
+    # Store GenAr in the session
+    # Store the results in the session
+    with app.test_request_context('/'):  # Create a dummy request context
+        session['artists_not_performing_any_genre'] = artists_not_performing_any_genre
+        session['genres_performed_by_no_artists'] = genres_performed_by_no_artists
+        session['GenAr'] = GenAr
+
+def fetch_track_ids(genre, artist, num_tracks=20):
+    artist_genres = get_artist_genres(artist)
+    if not artist_genres:
+        return []
+    if genre not in artist_genres:
+        return []
+    query = f"genre:{genre} artist:{artist}"
+    results = sp.search(q=query, type='track', limit=num_tracks)
+    track_ids = [track['id'] for track in results['tracks']['items']]
+    return track_ids
+
+def get_artist_genres(artist_name):
+    results = sp.search(q=artist_name, type='artist', limit=1)
+    if len(results['artists']['items']) == 0:
+        return []
+    artist_id = results['artists']['items'][0]['id']
+    artist_info = sp.artist(artist_id)
+    genres = artist_info['genres']
+    return genres
+
+def get_track_name(track_id):
+    track_info = sp.track(track_id)
+    return track_info['name']
+
+# Example usage
+genres = ['pop', 'rock', 'jazz']
+artists = ['Taylor Swift', 'Ed Sheeran', 'Frank Sinatra', 'Katy Perry']
+find_tracks_for_combinations(genres, artists)

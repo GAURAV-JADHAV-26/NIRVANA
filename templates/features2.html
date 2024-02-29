@@ -1,0 +1,176 @@
+speechiness
+valence
+instrumentalness
+energy
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotify API Parameters</title>
+<style>
+    .slider-container {
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 25px;
+        border-radius: 5px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+        margin-bottom: 10px;
+    }
+
+    .slider:hover {
+        opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4CAF50;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+    }
+
+    .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4CAF50;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+    }
+
+    .slider-value {
+        font-size: 14px;
+        font-weight: bold;
+        position: absolute;
+        bottom: -25px;
+        left: 0;
+        z-index: 0;
+    }
+</style>
+</head>
+<body>
+    <form action="/save_values2" method="post">
+        <div class="slider-container">
+            <p>Liveliness: Liveliness is a measure from 0.0 to 0.8 and represents a perceptual measure of intensity and activity. Higher values indicate livelier tracks.</p>
+            <input type="range" min="0" max="0.8" step="0.01" value="0" class="slider" id="livelinessSlider" name="liveliness">
+            <span id="livelinessValue" class="slider-value">0</span>
+            <button type="button" onclick="setDefault('liveliness')">Set Default</button>
+        </div>
+    
+        <div class="slider-container">
+            <p>Speechiness: Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.</p>
+            <input type="range" min="0.1" max="0.8" step="0.01" value="0.1" class="slider" id="speechinessSlider" name="speechiness">
+            <span id="speechinessValue" class="slider-value">0.1</span>
+            <button type="button" onclick="setDefault('speechiness')">Set Default</button>
+        </div>
+    
+        <div class="slider-container">
+            <p>Valence: A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).</p>
+            <input type="range" min="0.5" max="0.8" step="0.01" value="0.5" class="slider" id="valenceSlider" name="valence">
+            <span id="valenceValue" class="slider-value">0.5</span>
+            <button type="button" onclick="setDefault('valence')">Set Default</button>
+        </div>
+    
+        <div class="slider-container">
+            <p>Instrumentalness: Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.</p>
+            <input type="range" min="0.0" max="0.3" step="0.01" value="0" class="slider" id="instrumentalnessSlider" name="instrumentalness">
+            <span id="instrumentalnessValue" class="slider-value">0</span>
+            <button type="button" onclick="setDefault('instrumentalness')">Set Default</button>
+        </div>
+        
+        <button type="submit">Save Values</button>
+    </form>
+
+<script>
+    const sliders = document.querySelectorAll(".slider");
+    const defaultValues = {};
+
+    const attributes = {
+        "morning": {
+            "liveliness": [0.6, 0.8],
+            "instrumentalness": [0.0, 0.3],
+            "speechiness": [0.1, 0.5],
+            "valence": [0.5, 0.8]
+        },
+        "afternoon": {
+            "liveliness": [0.5, 0.7],
+            "instrumentalness": [0.0, 0.3],
+            "speechiness": [0.1, 0.6],
+            "valence": [0.5, 0.7]
+        },
+        "evening": {
+            "liveliness": [0.4, 0.6],
+            "instrumentalness": [0.0, 0.3],
+            "speechiness": [0.1, 0.7],
+            "valence": [0.5, 0.6]
+        },
+        "night": {
+            "liveliness": [0.2, 0.5],
+            "instrumentalness": [0.0, 0.3],
+            "speechiness": [0.1, 0.8],
+            "valence": [0.5, 0.5]
+        }
+    };
+    
+
+    sliders.forEach(slider => {
+        const value = slider.nextElementSibling;
+        value.innerHTML = slider.value;
+        defaultValues[slider.id] = 0;
+
+        slider.oninput = function() {
+            value.innerHTML = this.value;
+            const percent = (this.value - this.min) / (this.max - this.min);
+            const thumbWidth = parseFloat(window.getComputedStyle(this).getPropertyValue('width'));
+            const thumbPosition = percent * (thumbWidth - 25);
+            value.style.left = `${thumbPosition}px`;
+        }
+    });
+
+    function setDefault(attribute) {
+        if (defaultValues.hasOwnProperty(`${attribute}Slider`)) {
+            const slider = document.getElementById(`${attribute}Slider`);
+            const now = new Date();
+            const currentHour = now.getHours();
+            let timeSegment = "";
+
+            if (6 <= currentHour && currentHour < 12) {
+                timeSegment = "morning";
+            } else if (12 <= currentHour && currentHour < 18) {
+                timeSegment = "afternoon";
+            } else if (18 <= currentHour && currentHour < 22) {
+                timeSegment = "evening";
+            } else {
+                timeSegment = "night";
+            }
+
+            const defaultAverage = (attributes[timeSegment][attribute][0] + attributes[timeSegment][attribute][1]) / 2;
+            slider.value = defaultAverage;
+            slider.nextElementSibling.innerHTML = defaultAverage;
+
+            const percent = (defaultAverage - slider.min) / (slider.max - slider.min);
+            const thumbWidth = parseFloat(window.getComputedStyle(slider).getPropertyValue('width'));
+            const thumbPosition = percent * (thumbWidth - 25);
+            slider.nextElementSibling.style.left = `${thumbPosition}px`;
+
+            defaultValues[slider.id] = defaultAverage;
+        }
+    }
+</script>
+</body>
+</html>

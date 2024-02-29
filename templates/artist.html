@@ -15,6 +15,9 @@
     <div id="selectedArtists"></div>
     <button onclick="saveArtists()">Save Artists</button>
 
+    <!-- Add the Next button -->
+    <button onclick="redirectToSaveValues1()">Next</button>
+
     <script>
         // Array to store selected artists
         const selectedArtistsArray = [];
@@ -65,6 +68,11 @@
             }).catch(error => {
                 console.error('Error:', error);
             });
+        }
+
+        // Function to redirect to /save_values1
+        function redirectToSaveValues1() {
+            window.location.href = '/features';
         }
     </script>
 </body>

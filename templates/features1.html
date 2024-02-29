@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotify API Parameters</title>
+<style>
+    .slider-container {
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 25px;
+        border-radius: 5px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+        margin-bottom: 10px;
+    }
+
+    .slider:hover {
+        opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4CAF50;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+    }
+
+    .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4CAF50;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+    }
+
+    .slider-value {
+        font-size: 14px;
+        font-weight: bold;
+        position: absolute;
+        bottom: -25px;
+        left: 0;
+        z-index: 0;
+    }
+</style>
+</head>
+<body>
+<form action="/save_values1" method="post">
+    <div class="slider-container">
+        <p>Energy: Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.</p>
+        <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="energySlider" name="energy">
+        <span id="energyValue" class="slider-value">0</span>
+        <button type="button" onclick="setDefault('energy')">Set Default</button>
+    </div>
+
+    <div class="slider-container">
+        <p>Tempo: The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.</p>
+        <input type="range" min="30" max="150" step="1" value="0" class="slider" id="tempoSlider" name="tempo">
+        <span id="tempoValue" class="slider-value">0</span>
+        <button type="button" onclick="setDefault('tempo')">Set Default</button>
+    </div>
+
+    <div class="slider-container">
+        <p>Danceability: Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.</p>
+        <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="danceabilitySlider" name="danceability">
+        <span id="danceabilityValue" class="slider-value">0</span>
+        <button type="button" onclick="setDefault('danceability')">Set Default</button>
+    </div>
+
+    <div class="slider-container">
+        <p>Acousticness: A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.</p>
+        <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="acousticnessSlider" name="acousticness">
+        <span id="acousticnessValue" class="slider-value">0</span>
+        <button type="button" onclick="setDefault('acousticness')">Set Default</button>
+    </div>
+
+    <div class="slider-container">
+        <p>Loudness: The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude).</p>
+        <input type="range" min="-20" max="-5" step="1" value="0" class="slider" id="loudnessSlider" name="loudness">
+        <span id="loudnessValue" class="slider-value">0</span>
+        <button type="button" onclick="setDefault('loudness')">Set Default</button>
+    </div>
+    
+    <button type="submit">Save Values</button>
+</form>
+
+<script>
+    const sliders = document.querySelectorAll(".slider");
+    const defaultValues = {};
+
+    const attributes = {
+        "morning": {"energy": [0.7, 1.0], "tempo": [100, 150], "danceability": [0.5, 1.0],
+                    "acousticness": [0.0, 0.5], "loudness": [-20, -5]},
+        "afternoon": {"energy": [0.6, 0.8], "tempo": [90, 120], "danceability": [0.4, 0.8],
+                      "acousticness": [0.0, 0.5], "loudness": [-20, -5]},
+        "evening": {"energy": [0.4, 0.7], "tempo": [60, 100], "danceability": [0.3, 0.6],
+                    "acousticness": [0.0, 0.5], "loudness": [-20, -5]},
+        "night": {"energy": [0.2, 0.5], "tempo": [30, 90], "danceability": [0.2, 0.5],
+                  "acousticness": [0.0, 0.5], "loudness": [-20, -5]}
+    };
+
+    sliders.forEach(slider => {
+        const value = slider.nextElementSibling;
+        value.innerHTML = slider.value;
+        defaultValues[slider.id] = 0;
+
+        slider.oninput = function() {
+            value.innerHTML = this.value;
+            const percent = (this.value - this.min) / (this.max - this.min);
+            const thumbWidth = parseFloat(window.getComputedStyle(this).getPropertyValue('width'));
+            const thumbPosition = percent * (thumbWidth - 25);
+            value.style.left = `${thumbPosition}px`;
+        }
+    });
+
+    function setDefault(attribute) {
+        if (defaultValues.hasOwnProperty(`${attribute}Slider`)) {
+            const slider = document.getElementById(`${attribute}Slider`);
+            const now = new Date();
+            const currentHour = now.getHours();
+            let timeSegment = "";
+
+            if (6 <= currentHour && currentHour < 12) {
+                timeSegment = "morning";
+            } else if (12 <= currentHour && currentHour < 18) {
+                timeSegment = "afternoon";
+            } else if (18 <= currentHour && currentHour < 22) {
+                timeSegment = "evening";
+            } else {
+                timeSegment = "night";
+            }
+
+            const defaultAverage = (attributes[timeSegment][attribute][0] + attributes[timeSegment][attribute][1]) / 2;
+            slider.value = defaultAverage;
+            slider.nextElementSibling.innerHTML = defaultAverage;
+
+            const percent = (defaultAverage - slider.min) / (slider.max - slider.min);
+            const thumbWidth = parseFloat(window.getComputedStyle(slider).getPropertyValue('width'));
+            const thumbPosition = percent * (thumbWidth - 25);
+            slider.nextElementSibling.style.left = `${thumbPosition}px`;
+
+            defaultValues[slider.id] = defaultAverage;
+        }
+    }
+</script>
+</body>
+</html>
