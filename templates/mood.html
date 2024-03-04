@@ -139,7 +139,7 @@
         <div class="container">
             <!-- Cards with selectable keywords will be dynamically generated here -->
             {% for keyword in keywords %}
-            <label class="checkbox-container card">
+            <label class="checkbox-container card" style="background-image: url('/static/mood-images/{{ keyword }}.jpg');">
                 <input type="checkbox" name="selected_keywords" value="{{ keyword }}" style="display: none;">
                 <span class="checkmark"></span>
                 <div class="card-content">{{ keyword }}</div>

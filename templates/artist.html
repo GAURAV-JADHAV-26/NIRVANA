@@ -220,101 +220,86 @@
         </div>
         <div id="selectedArtists" style="display: none;"></div>
         <button id="saveArtistsButton" onclick="saveArtists()" class="save-artists" style="display: none;">Save Artists</button>
-
-
-
-
-
     </div>
     
     <script>
+        // Array to store selected artists
+        const selectedArtistsArray = [];
 
-
-
-
-        
-    // Function to search for artists
-    function searchArtist() {
-        const searchTerm = document.getElementById('artistSearch').value;
-        // Fetch data based on the search term
-        fetch(`/search_artist?q=${encodeURIComponent(searchTerm)}`)
-            .then(response => response.json())
-            .then(data => {
-                const container = document.getElementById('container');
-                container.style.alignItems = 'flex-start'; // Align items to the top
-                const artistResults = document.getElementById('artistResults');
-                artistResults.innerHTML = ''; // Clear previous results
-                // Iterate over the data and create cards for each artist
-                data.forEach(artist => {
-                    const card = document.createElement('div');
-                    card.classList.add('card');
-                    card.style.backgroundImage = `url(${artist.image})`; // Set background image
-                    card.innerHTML = `
-                        <div class="card-content">${artist.name}</div>
-                    `;
-                    card.addEventListener('click', function() {
-                        toggleSelection(card);
+        // Function to search for artists
+        function searchArtist() {
+            const searchTerm = document.getElementById('artistSearch').value;
+            fetch(`/search_artist?q=${encodeURIComponent(searchTerm)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('container');
+                    container.style.alignItems = 'flex-start'; // Align items to the top
+                    const artistResults = document.getElementById('artistResults');
+                    artistResults.innerHTML = ''; // Clear previous results
+                    // Iterate over the data and create cards for each artist
+                    data.forEach(artist => {
+                        const card = document.createElement('div');
+                        card.classList.add('card');
+                        card.style.backgroundImage = `url(${artist.image})`; // Set background image
+                        card.innerHTML = `
+                            <div class="card-content">${artist.name}</div>
+                        `;
+                        card.addEventListener('click', function() {
+                            toggleSelection(card);
+                        });
+                        artistResults.appendChild(card);
                     });
-                    artistResults.appendChild(card);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                 });
-                // Check if any card is selected and show the save button accordingly
-                checkSelectedArtists();
+        }
+
+        // Function to toggle selection of artists
+        function toggleSelection(card) {
+            if (card.classList.contains('selected')) {
+                card.classList.remove('selected');
+                const artistName = card.querySelector('.card-content').textContent;
+                const index = selectedArtistsArray.indexOf(artistName);
+                if (index !== -1) {
+                    selectedArtistsArray.splice(index, 1);
+                }
+            } else {
+                card.classList.add('selected');
+                const artistName = card.querySelector('.card-content').textContent;
+                selectedArtistsArray.push(artistName);
+            }
+            // Check if any artist is selected and show/hide the save button accordingly
+            const saveButton = document.getElementById('saveArtistsButton');
+            if (selectedArtistsArray.length > 0) {
+                saveButton.style.display = 'block';
+            } else {
+                saveButton.style.display = 'none';
+            }
+        }
+
+        // Function to save selected artists
+        function saveArtists() {
+            // Send the array of selected artists to the backend
+            fetch('/save_selected_artists', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ artists: selectedArtistsArray })
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Selected artists saved successfully.');
+                } else {
+                    console.error('Failed to save selected artists.');
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
             });
-    }
-
-    // Function to toggle selection of artists
-    function toggleSelection(card) {
-        card.classList.toggle('selected');
-        // Check if any card is selected and show the save button accordingly
-        checkSelectedArtists();
-    }
-
-    // Function to check if any card is selected and show the save button accordingly
-    function checkSelectedArtists() {
-        const saveButton = document.getElementById('saveArtistsButton');
-        const selectedCards = document.querySelectorAll('.card.selected');
-        if (selectedCards.length > 0) {
-            saveButton.style.display = 'block';
-        } else {
-            saveButton.style.display = 'none';
+            //console.log(selectedArtistsArray)
         }
-    }
-
-    // Function to save selected artists
-    function saveArtists() {
-        const selectedArtistsArray = [];
-        // Get all selected artists and add them to the array
-        document.querySelectorAll('.card.selected').forEach(card => {
-            const artistName = card.querySelector('.card-content').textContent;
-            selectedArtistsArray.push(artistName);
-        });
-
-        // Send the array of selected artists to the backend
-        fetch('/save_selected_artists', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ artists: selectedArtistsArray })
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Selected artists saved successfully.');
-            } else {
-                console.error('Failed to save selected artists.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-
-
     </script>
-
-    
 </body>
 </html>
