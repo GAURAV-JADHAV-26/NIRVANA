@@ -2,7 +2,6 @@ from flask import Flask, request, redirect, session, render_template, jsonify,js
 from spotipy.oauth2 import SpotifyClientCredentials
 import requests,base64,spotipy
 import os
-
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
@@ -17,7 +16,6 @@ TOKEN_URL = 'https://accounts.spotify.com/api/token'
 
 client_credentials_manager = SpotifyClientCredentials(client_id='1b1b24fc94f2465f92cf10b64d1317da', client_secret='c88f8847d6ef4a60b8c7003318867932')
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-
 mood_keywords = [
     "happy", "sad", "energetic", "relaxing", "uplifting", "chill", "party", "mellow", "romantic",
     "melancholic", "exciting", "calm", "lively", "dreamy", "groovy", "reflective", "aggressive",
@@ -27,7 +25,56 @@ mood_keywords = [
     "enigmatic", "pensive", "tranquil", "enthusiastic", "euphoric", "thoughtful", "suspenseful",
     "ecstatic", "brooding"
 ]
-GenAr = {}
+mood_ranges = {
+    "happy": {"valence_range": (0.6, 1.0), "energy_range": (0.6, 1.0), "tempo_range": (100, 180), "danceability_range": (0.5, 1.0)},
+    "sad": {"valence_range": (0.0, 0.4), "energy_range": (0.0, 0.5), "tempo_range": (50, 100), "acousticness_range": (0.6, 1.0)},
+    "energetic": {"energy_range": (0.7, 1.0), "tempo_range": (120, 200), "loudness_range": (-10, -4)},
+    "relaxing": {"energy_range": (0.2, 0.5), "tempo_range": (50, 100), "acousticness_range": (0.5, 1.0), "loudness_range": (-30, -15)},
+    "uplifting": {"valence_range": (0.6, 1.0), "energy_range": (0.5, 1.0), "tempo_range": (100, 160)},
+    "chill": {"energy_range": (0.2, 0.5), "tempo_range": (60, 100), "acousticness_range": (0.5, 1.0)},
+    "party": {"energy_range": (0.7, 1.0), "tempo_range": (100, 200), "loudness_range": (-10, -4)},
+    "mellow": {"energy_range": (0.2, 0.5), "tempo_range": (50, 90), "acousticness_range": (0.6, 1.0), "loudness_range": (-30, -15)},
+    "romantic": {"valence_range": (0.5, 0.8), "tempo_range": (60, 100), "acousticness_range": (0.6, 1.0)},
+    "melancholic": {"valence_range": (0.0, 0.4), "energy_range": (0.0, 0.5), "tempo_range": (50, 100), "acousticness_range": (0.6, 1.0)},
+    "exciting": {"energy_range": (0.7, 1.0), "tempo_range": (150, 220), "loudness_range": (-8, -3)},
+    "calm": {"energy_range": (0.2, 0.5), "tempo_range": (40, 90), "acousticness_range": (0.6, 1.0), "loudness_range": (-30, -15)},
+    "lively": {"energy_range": (0.6, 1.0), "tempo_range": (100, 150), "loudness_range": (-8, -3)},
+    "dreamy": {"valence_range": (0.5, 0.8), "tempo_range": (60, 110), "acousticness_range": (0.6, 1.0)},
+    "groovy": {"energy_range": (0.6, 1.0), "tempo_range": (90, 130), "danceability_range": (0.5, 1.0)},
+    "reflective": {"valence_range": (0.3, 0.7), "energy_range": (0.2, 0.6), "tempo_range": (50, 100), "acousticness_range": (0.5, 1.0)},
+    "aggressive": {"energy_range": (0.7, 1.0), "tempo_range": (100, 180), "loudness_range": (-3, 0)},
+    "serene": {"valence_range": (0.4, 0.7), "tempo_range": (40, 80), "acousticness_range": (0.6, 1.0), "loudness_range": (-30, -15)},
+    "peaceful": {"valence_range": (0.4, 0.7), "tempo_range": (40, 80), "acousticness_range": (0.6, 1.0), "loudness_range": (-30, -15)},
+    "joyful": {"valence_range": (0.7, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (100, 160)},
+    "hopeful": {"valence_range": (0.6, 0.9), "energy_range": (0.6, 1.0), "tempo_range": (90, 140)},
+    "blissful": {"valence_range": (0.7, 1.0), "energy_range": (0.6, 1.0), "tempo_range": (80, 120)},
+    "sentimental": {"valence_range": (0.3, 0.7), "energy_range": (0.2, 0.6), "tempo_range": (50, 90), "acousticness_range": (0.5, 1.0)},
+    "intense": {"valence_range": (0.3, 0.7), "energy_range": (0.7, 1.0), "tempo_range": (120, 200), "loudness_range": (-5, 0)},
+    "playful": {"valence_range": (0.6, 1.0), "energy_range": (0.6, 1.0), "tempo_range": (100, 160)},
+    "optimistic": {"valence_range": (0.6, 1.0), "energy_range": (0.5, 1.0), "tempo_range": (90, 140)},
+    "dramatic": {"valence_range": (0.2, 0.6), "energy_range": (0.6, 1.0), "tempo_range": (80, 120)},
+    "moody": {"valence_range": (0.2, 0.6), "energy_range": (0.2, 0.6), "tempo_range": (60, 120), "acousticness_range": (0.5, 1.0)},
+    "soothing": {"valence_range": (0.4, 0.7), "energy_range": (0.2, 0.5), "tempo_range": (40, 90), "acousticness_range": (0.6, 1.0), "loudness_range": (-30, -15)},
+    "bittersweet": {"valence_range": (0.3, 0.7), "energy_range": (0.2, 0.6), "tempo_range": (60, 100)},
+    "dark": {"valence_range": (0.0, 0.4), "energy_range": (0.2, 0.6), "tempo_range": (60, 120), "acousticness_range": (0.6, 1.0)},
+    "light": {"valence_range": (0.6, 1.0), "energy_range": (0.4, 0.7), "tempo_range": (80, 120)},
+    "inspiring": {"valence_range": (0.7, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (100, 160)},
+    "nostalgic": {"valence_range": (0.3, 0.7), "energy_range": (0.3, 0.7), "tempo_range": (60, 100), "acousticness_range": (0.5, 1.0)},
+    "empowering": {"valence_range": (0.6, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (100, 160)},
+    "whimsical": {"valence_range": (0.5, 0.8), "energy_range": (0.5, 0.8), "tempo_range": (80, 120)},
+    "ethereal": {"valence_range": (0.4, 0.7), "energy_range": (0.2, 0.5), "tempo_range": (40, 90), "acousticness_range": (0.6, 1.0), "loudness_range": (-30, -15)},
+    "triumphant": {"valence_range": (0.7, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (100, 160)},
+    "mysterious": {"valence_range": (0.3, 0.7), "energy_range": (0.3, 0.7), "tempo_range": (60, 120), "acousticness_range": (0.5, 1.0)},
+    "enigmatic": {"valence_range": (0.3, 0.7), "energy_range": (0.3, 0.7), "tempo_range": (60, 120), "acousticness_range": (0.5, 1.0)},
+    "pensive": {"valence_range": (0.3, 0.7), "energy_range": (0.2, 0.5), "tempo_range": (50, 100), "acousticness_range": (0.5, 1.0), "loudness_range": (-30, -15)},
+    "tranquil": {"valence_range": (0.4, 0.7), "energy_range": (0.2, 0.5), "tempo_range": (40, 90), "acousticness_range": (0.6, 1.0), "loudness_range": (-30, -15)},
+    "enthusiastic": {"valence_range": (0.6, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (100, 160)},
+    "euphoric": {"valence_range": (0.7, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (100, 160)},
+    "thoughtful": {"valence_range": (0.3, 0.7), "energy_range": (0.2, 0.6), "tempo_range": (50, 100), "acousticness_range": (0.5, 1.0)},
+    "suspenseful": {"valence_range": (0.2, 0.6), "energy_range": (0.6, 1.0), "tempo_range": (80, 120)},
+    "ecstatic": {"valence_range": (0.7, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (120, 180)},
+    "brooding": {"valence_range": (0.2, 0.6), "energy_range": (0.2, 0.6), "tempo_range": (60, 120), "acousticness_range": (0.5, 1.0)}
+}
 def get_access_token():
     url = 'https://accounts.spotify.com/api/token'
     headers = {'Authorization': 'Basic ' + base64.b64encode(f'{CLIENT_ID}:{CLIENT_SECRET}'.encode()).decode()}
@@ -149,118 +196,24 @@ def save_values2():
         session['valence'] = valence
         session['instrumentalness'] = instrumentalness
         return redirect('/recommendations')
-        
+
+
 @app.route('/recommendations')
-def do():
-    artists = session['selected_artists']
-    genres = session['selected_genres']
-    moods = session['selected_keywords']
-    global GenAr
-    find_tracks_for_combinations1(genres, artists, GenAr)
-    print("Mood Based Tracks")
-    recommend_playlist_by_mood(moods, GenAr)
-    return "Recommendations Processed"
-
-def recommend_playlist_by_mood(moods, GenAr):
-    for mood in moods:
-        playlists = sp.search(q=f'{mood} mood', type='playlist', limit=5)
-        recommended_playlists = playlists['playlists']['items']
-        
-        for playlist in recommended_playlists:
-            playlist_id = playlist['id']
-            results = sp.playlist_tracks(playlist_id)
-            for track in results['items']:
-                track_name = track['track']['name']
-                artists = ", ".join([artist['name'] for artist in track['track']['artists']])
-                print(f"{track_name} - {artists}")
-                
-                # Store the track in GenAr under the mood key
-                GenAr.setdefault(mood, []).append({
-                    'name': track_name,
-                    'artists': artists,
-                    'id': track['track']['id']
-                })
-
-def find_tracks_for_combinations1(genres, artists, GenAr, num_tracks=20):
-    all_artist_genres = set()
-    all_genres = set(genres)
-    artists_not_performing_any_genre = []
-    genres_performed_by_no_artists = []
-
-    # Iterate through the artists to find their performed genres
-    for artist in artists:
-        artist_genres = get_artist_genres(artist)
-        if not artist_genres:
-            artists_not_performing_any_genre.append(artist)
-            continue
-        all_artist_genres.update(artist_genres)
-
-    # Iterate through the genres to check if any genre is not performed by any artist
-    for genre in genres:
-        if genre not in all_artist_genres:
-            genres_performed_by_no_artists.append(genre)
-
-    # Iterate through each genre and artist to fetch track IDs
-    for genre in genres:
-        for artist in artists:
-            track_ids = fetch_track_ids(genre, artist, num_tracks)
-            if track_ids:
-                # Store the track IDs in the dictionary GenAr
-                GenAr.setdefault('genre_artist_combinations', {}).setdefault(genre, {}).setdefault(artist, []).extend(track_ids)
-
-                # Print the names of the tracks
-                for track_id in track_ids:
-                    track_name = get_track_name(track_id)
-                    print(f"Track Name: {track_name}")
-
-    # Fetch recommendations for genres performed by no artists
-    for genre in genres_performed_by_no_artists:
-        # Fetch recommendations using sp.recommendations for each genre
-        results = sp.recommendations(seed_genres=[genre], limit=10)
-        # Store the track IDs in the dictionary GenAr
-        print(f"Genre: {genre}")
-        GenAr.setdefault('genres_performed_by_no_artists', {}).setdefault(genre, []).extend([track['id'] for track in results['tracks']])
-
-        # Print the names of the tracks (Optional)
-        for track in results['tracks']:
-            print(f"Track Name: {track['name']}")
-def fetch_track_ids(genre, artist, num_tracks=20):
-    artist_genres = get_artist_genres(artist)
-    if not artist_genres:
-        return []
-    if genre not in artist_genres:
-        return []
-    query = f"genre:{genre} artist:{artist}"
-    results = sp.search(q=query, type='track', limit=num_tracks)
-    track_ids = [track['id'] for track in results['tracks']['items']]
-    return track_ids
-
-def get_artist_genres(artist_name):
-    if not artist_name:
-        return []
-    results = sp.search(q=artist_name, type='artist', limit=1)
-    if len(results['artists']['items']) == 0:
-        return []
-    artist_id = results['artists']['items'][0]['id']
-    artist_info = sp.artist(artist_id)
-    genres = artist_info['genres']
-    return genres
-
-def get_track_name(track_id):
-    track_info = sp.track(track_id)
-    return track_info['name']
-
-def fetch_top_tracks(entities, num_tracks=10):
-    top_tracks = []
-    for entity in entities:
-        top_tracks.extend(fetch_track_ids(entity, "", num_tracks))
-    return top_tracks
-
-def print_top_tracks(track_ids):
-    for track_id in track_ids:
-        track_name = get_track_name(track_id)
-        print(f"Track Name: {track_name}")
-
-
+def calculation():
+    # Calculate the proportions based on the numbers of genres, artists, and moods
+    num_tracks = 100
+    num_genres = len(session['selected_genres'])
+    num_artists = len(session['selected_artists'])
+    num_moods = len(session['selected_keywords'])
+    total = num_genres + num_artists + num_moods
+    genre_artist_proportion = (num_genres + num_artists) / total
+    mood_proportion = num_moods / total
+    
+    # Calculate the number of tracks to allocate for genres and artists, and for moods
+    num_genre_artist_tracks = int(num_tracks * genre_artist_proportion)
+    num_mood_tracks = num_tracks - num_genre_artist_tracks
+    print(num_genre_artist_tracks, num_mood_tracks)
+def track_generation():
+    pass
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
