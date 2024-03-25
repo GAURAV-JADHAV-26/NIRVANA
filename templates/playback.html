@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations For You</title>
+</head>
+<body>
+    <h1>Recommendations For You</h1>
+    <form action="/save_playlist" method="post">
+        <ul>
+            {% for track in tracks %}
+                <li>
+                    <h2>{{ track.name }}</h2>
+                    <p>Artists: 
+                    {% for artist in track.artists %}
+                        {{ artist.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                    </p>
+                    <iframe src="https://open.spotify.com/embed/track/{{ track.id }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                    <input type="checkbox" name="track_ids" value="{{ track.id }}">
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Save to Spotify</button>
+    </form>
+</body>
+</html>
