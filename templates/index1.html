@@ -9,13 +9,69 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <style>
-        .nlogo {
-            width: 50px; /* Adjust the width as needed */
-            height: auto; /* Maintain aspect ratio */
-        }
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* This will prevent scrollbars caused by the video */
+    position: relative; /* Required for absolute positioning */
+    transition: opacity 0.5s ease; /* Smooth transition effect */
+}
+
+/* Set opacity to 0 to hide the body during page transition */
+body.loading {
+    opacity: 0;
+}
+
+#background-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1; /* Ensure the video is behind other elements */
+    object-fit: cover; /* Cover the entire viewport */
+}
+
+.container {
+    position: relative; /* Ensure the container stays on top of the video */
+    z-index: 1;
+    text-align: center;
+    padding: 20px;
+    color: white;
+}
+
+.nlogo {
+    width: 50px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.social-icons {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.social-icons a {
+    margin: 0 20px;
+    display: inline-block;
+}
+
+.social-icons img {
+    width: 50px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+}
     </style>
 </head>
 <body>
+    <!-- Background Video -->
+    <video autoplay loop muted id="background-video" preload="none">
+        <source src="../static/Untitled video - Made with Clipchamp (1).mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
     <header>
         <h2 class="logo btnLogin-popup">
             <img src="../static/images/logo1.jpg" alt="Logo" class="nlogo">
@@ -34,6 +90,13 @@
             <img src="../static/images/Spotify_Logo.png" alt="Spotify Logo" class="spotify-logo">
             Connect to Spotify
         </a>
+    </div>
+
+    <!-- Social Icons -->
+    <div class="social-icons">
+        <a href="mailto:infectedfactz1@gmail.com" target="_blank"><img src="../static/image2.png" alt="Gmail"></a>
+        <a href="https://www.linkedin.com/in/chirag-ingale-116960263/" target="_blank"><img src="../static/image1.png" alt="LinkedIn"></a>
+        <a href="mailto:ingaleck22.comp@coeptech.ac.in" target="_blank"><img src="../static/image.png" alt="Outlook"></a>
     </div>
 
 </body>

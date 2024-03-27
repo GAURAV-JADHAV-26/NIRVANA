@@ -4,59 +4,106 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Spotify API Parameters</title>
-<style>
-    .slider-container {
-        margin-bottom: 40px;
-        position: relative;
-    }
+<style>    .slider-container {
+    margin-bottom: 40px;
+    position: relative;
+}    .slider-container {
+    margin-bottom: 40px;
+    position: relative;
+}
 
-    .slider {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 25px;
-        border-radius: 5px;
-        background: #d3d3d3;
-        outline: none;
-        opacity: 0.7;
-        -webkit-transition: .2s;
-        transition: opacity .2s;
-        margin-bottom: 10px;
-    }
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 25px;
+    border-radius: 5px; /* Curved ends */
+    background: linear-gradient(to right, #FF00FF, #00FFFF); /* Glitter effect */
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    margin-bottom: 10px;
+}
 
-    .slider:hover {
-        opacity: 1;
-    }
+.slider:hover {
+    opacity: 1;
+}
 
-    .slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        background: #4CAF50;
-        cursor: pointer;
-        position: relative;
-        z-index: 1;
-    }
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50; /* Fluorescent color */
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
 
-    .slider::-moz-range-thumb {
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        background: #4CAF50;
-        cursor: pointer;
-        position: relative;
-        z-index: 1;
-    }
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50; /* Fluorescent color */
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
 
-    .slider-value {
-        font-size: 14px;
-        font-weight: bold;
-        position: absolute;
-        bottom: -25px;
-        left: 0;
-        z-index: 0;
-    }
+.slider-value {
+    font-size: 16px; /* Improved font size */
+    font-weight: bold;
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    z-index: 0;
+}
+.bubbly-button {
+    padding: 10px 20px;
+    background-color: #1ED760;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Transition effect */
+    position: relative;
+    overflow: hidden;
+}
+
+.bubbly-button:hover {
+    transform: scale(1.1); /* Increase size on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add shadow on hover */
+}
+
+.bubbly-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transition: all 0.3s ease; /* Transition effect */
+    z-index: 0;
+    transform: translate(-50%, -50%);
+}
+
+.bubbly-button:hover::before {
+    width: 0;
+    height: 0;
+}
+
+.bubbly-button span {
+    position: relative;
+    z-index: 1;
+}
+p {
+    font-family: Arial, sans-serif; /* Improved font family */
+    font-size: 16px; /* Improved font size */
+    line-height: 1.5; /* Improved line height for better readability */
+}
 </style>
 </head>
 <body>
@@ -65,7 +112,7 @@
         <p>Energy: Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.</p>
         <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="energySlider" name="energy">
         <span id="energyValue" class="slider-value">0</span>
-        <button type="button" onclick="setDefault('energy')">Set Default</button>
+        <button type="button" onclick="setDefault('energy')" class="bubbly-button"><span>Set Default</span></button>
     </div>
 
     <div class="slider-container">
@@ -95,7 +142,26 @@
         <span id="loudnessValue" class="slider-value">0</span>
         <button type="button" onclick="setDefault('loudness')">Set Default</button>
     </div>
-    
+    <div class="slider-container">
+        <p>Speechiness: Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.</p>
+        <input type="range" min="0.1" max="0.8" step="0.01" value="0.1" class="slider" id="speechinessSlider" name="speechiness">
+        <span id="speechinessValue" class="slider-value">0.1</span>
+        <button type="button" onclick="setDefault('speechiness')">Set Default</button>
+    </div>
+
+    <div class="slider-container">
+        <p>Valence: A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).</p>
+        <input type="range" min="0.5" max="0.8" step="0.01" value="0.5" class="slider" id="valenceSlider" name="valence">
+        <span id="valenceValue" class="slider-value">0.5</span>
+        <button type="button" onclick="setDefault('valence')">Set Default</button>
+    </div>
+
+    <div class="slider-container">
+        <p>Instrumentalness: Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.</p>
+        <input type="range" min="0.0" max="0.3" step="0.01" value="0" class="slider" id="instrumentalnessSlider" name="instrumentalness">
+        <span id="instrumentalnessValue" class="slider-value">0</span>
+        <button type="button" onclick="setDefault('instrumentalness')">Set Default</button>
+    </div>
     <button type="submit">Save Values</button>
 </form>
 
@@ -105,13 +171,24 @@
 
     const attributes = {
         "morning": {"energy": [0.7, 1.0], "tempo": [100, 150], "danceability": [0.5, 1.0],
-                    "acousticness": [0.0, 0.5], "loudness": [-20, -5]},
+                    "acousticness": [0.0, 0.5], "loudness": [-20, -5],"instrumentalness": [0.0, 0.3],
+                    "speechiness": [0.1, 0.5],
+                    "valence": [0.5, 0.8]},
         "afternoon": {"energy": [0.6, 0.8], "tempo": [90, 120], "danceability": [0.4, 0.8],
-                      "acousticness": [0.0, 0.5], "loudness": [-20, -5]},
+                      "acousticness": [0.0, 0.5], "loudness": [-20, -5],
+                      "instrumentalness": [0.0, 0.3],
+                      "speechiness": [0.1, 0.6],
+                      "valence": [0.5, 0.7]},
         "evening": {"energy": [0.4, 0.7], "tempo": [60, 100], "danceability": [0.3, 0.6],
-                    "acousticness": [0.0, 0.5], "loudness": [-20, -5]},
+                    "acousticness": [0.0, 0.5], "loudness": [-20, -5],
+                    "instrumentalness": [0.0, 0.3],
+                    "speechiness": [0.1, 0.7],
+                    "valence": [0.5, 0.6]},
         "night": {"energy": [0.2, 0.5], "tempo": [30, 90], "danceability": [0.2, 0.5],
-                  "acousticness": [0.0, 0.5], "loudness": [-20, -5]}
+                  "acousticness": [0.0, 0.5], "loudness": [-20, -5],
+                  "instrumentalness": [0.0, 0.3],
+                  "speechiness": [0.1, 0.8],
+                  "valence": [0.5, 0.5]}
     };
 
     sliders.forEach(slider => {

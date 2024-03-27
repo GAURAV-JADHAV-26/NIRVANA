@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Page</title>
+    <style>
+        body {
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background : linear-gradient(90deg, #A100FFFF 0%, #71C4FFFF 100%);
+        }
+        h1 {
+            font-size: 2em; /* Large font size for heading */
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em; /* Medium font size for paragraph */
+            margin-bottom: 30px;
+        }
+        .visit-again {
+            font-size: 1.2em; /* Medium font size */
+            background-color: #ffffff; /* White background color */
+            color: #1DB954; /* Green text color */
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin-right: 20px;
+        }
+        .visit-again:hover {
+            background-color: #C4E4FF; /* Light Purple background color on hover */
+        }
+        .feedback-form {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .feedback-form input[type="text"],
+        .feedback-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .feedback-form textarea {
+            height: 150px;
+        }
+        .feedback-form button {
+            padding: 10px 20px;
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .feedback-form button:hover {
+            background-color: #1ED760;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nirvana Playlist Created!</h1>
+    <p>Your playlist has been successfully created. Enjoy your music!</p>
+    <p>Don't forget to visit us again for more recommendations!</p>
+    <a href="/" class="visit-again">Visit Again</a>
+
+    <!-- Feedback Form -->
+    <div class="feedback-form">
+        <h2>Share Your Feedback</h2>
+        <form action="/submit_feedback" method="post">
+            <input type="text" name="name" placeholder="Your Name">
+            <textarea name="feedback" placeholder="Your Feedback"></textarea>
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+</body>
+</html>

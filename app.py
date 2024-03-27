@@ -1,4 +1,5 @@
 from flask import Flask, request, redirect, session, render_template, jsonify,json,url_for
+from flask_mail import Mail, Message    
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
@@ -18,6 +19,8 @@ app.secret_key = os.urandom(24)
 client = pymongo.MongoClient('mongodb://localhost:27017/')
 db = client['music_db']
 collection = db['tracks']
+feedbacks_db = client['feedbacks_db']
+feedbacks_collection = feedbacks_db['feedbacks']
 
 CLIENT_ID = '1b1b24fc94f2465f92cf10b64d1317da'
 CLIENT_SECRET = 'c88f8847d6ef4a60b8c7003318867932'
@@ -27,6 +30,8 @@ GENRE_URL = 'https://api.spotify.com/v1/recommendations/available-genre-seeds'
 MOOD_URL = 'https://api.spotify.com/v1/browse/categories/mood/playlists'
 AUTHORIZE_URL = 'https://accounts.spotify.com/authorize'
 TOKEN_URL = 'https://accounts.spotify.com/api/token'
+
+
 client_credentials_manager = SpotifyClientCredentials(client_id='1b1b24fc94f2465f92cf10b64d1317da', client_secret='c88f8847d6ef4a60b8c7003318867932')
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 sp_oauth = SpotifyOAuth(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, scope=SCOPE)
@@ -372,8 +377,17 @@ def index():
     return render_template('./index1.html', auth_url=auth_url)
 
 @app.route('/callback')
-def callback():
+def callback(): 
     code = request.args.get('code')
+    auth_code = request.args.get('code')
+    token_info = sp_oauth.get_access_token(auth_code)
+    session['token_info'] = token_info  # Store token information in session
+    
+    # Retrieve user's email using Spotify API
+    sp = spotipy.Spotify(auth=token_info['access_token'])
+    user_info = sp.me()
+    user_email = user_info['email']
+    session['user_email'] = user_email  # Store user's email in session
     data = {
         'grant_type': 'authorization_code',
         'code': code,
@@ -444,32 +458,21 @@ def save_values1():
         danceability = request.form['danceability']
         acousticness = request.form['acousticness']
         loudness = request.form['loudness']
-        
+        speechiness = float(request.form['speechiness'])
+        valence = float(request.form['valence'])
+        instrumentalness = float(request.form['instrumentalness'])
         # Store the values in session variables
         session['energy'] = energy
         session['tempo'] = tempo
         session['danceability'] = danceability
         session['acousticness'] = acousticness
         session['loudness'] = loudness
-        return render_template('features2.html')
-    else:
-        return 'Invalid request method'
-@app.route('/save_values2', methods=['POST'])
-def save_values2():
-    if request.method == 'POST':
-        liveliness = float(request.form['liveliness'])
-        speechiness = float(request.form['speechiness'])
-        valence = float(request.form['valence'])
-        instrumentalness = float(request.form['instrumentalness'])
-
-        # Store values in the session
-        session['liveliness'] = liveliness
         session['speechiness'] = speechiness
         session['valence'] = valence
         session['instrumentalness'] = instrumentalness
         return redirect('/recommendations')
-
-
+    else:
+        return 'Invalid request method'
 @app.route('/recommendations')
 def main():
     selected_artists = session.get('selected_artists', [])
@@ -634,6 +637,7 @@ def main():
             break
     track_similarity_pairs.sort(key=lambda x: x[1], reverse=True)
     track_similarity_pairs = [track_id for track_id, _ in track_similarity_pairs]
+    track_similarity_pairs = list(dict.fromkeys(track_similarity_pairs))
     
     track_info_list = []
     for track_id in track_similarity_pairs:
@@ -644,18 +648,87 @@ def main():
 
 @app.route('/save_playlist', methods=['POST'])
 def save_playlist():
+    # Retrieve track IDs from the POST request
     track_ids = request.form.getlist('track_ids')
-    playlist_name = 'NirvanaPlaylist'
-    token_info = session.get('token_info', None)
-    
-    sp = spotipy.Spotify(auth=token_info['access_token'])
-    user_info = sp.current_user()
-    user_id = user_info['id']
-    
-    playlist = sp.user_playlist_create(user_id, playlist_name, public=True)
-    sp.playlist_add_items(playlist['id'], track_ids)
-    
-    return 'Playlist saved successfully!'
+
+    # Get the user's access token (you need to implement this part)
+    access_token = session.get('access_token')
+
+    if access_token:
+        # Create the playlist
+        playlist_id = create_playlist(access_token)
+
+        if playlist_id:
+            # Add tracks to the playlist
+            add_tracks_to_playlist(access_token, playlist_id, track_ids)
+
+            # Clear the session after saving playlist
+            session.clear()
+
+            # Clear MongoDB data (you need to implement this part)
+            # Clear MongoDB data (you need to implement this part)
+            client.drop_database('music_db')
+
+            return 'Playlist saved successfully!'
+        else:
+            return 'Failed to create playlist'
+    else:
+        return 'Failed to get user access token'
+def create_playlist(access_token):
+    headers = {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json',
+    }
+
+    data = {
+        'name': 'Nirvana Playlist',
+        'description': 'This is a playlist created via the Spotify API',
+        'public': False  # Change to True if you want the playlist to be public
+    }
+
+    response = requests.post('https://api.spotify.com/v1/me/playlists', headers=headers, json=data)
+
+    if response.status_code == 201:
+        return response.json()['id']
+    else:
+        return None
+
+def add_tracks_to_playlist(access_token, playlist_id, track_ids):
+    headers = {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json',
+    }
+
+    data = {
+        'uris': ['spotify:track:' + track_id for track_id in track_ids]
+    }
+
+    response = requests.post(f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks', headers=headers, json=data)
+
+    if response.status_code != 201:
+        print('Failed to add tracks to playlist')
+@app.route('/final') 
+def final():
+    return render_template('final.html')
+@app.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    if request.method == 'POST':
+        name = request.form['name']
+        
+        # Retrieve user's email from session
+        if 'user_email' in session:
+            email = session['user_email']
+        else:
+            # Handle the case where email is not available
+            email = None
+        
+        feedback = request.form['feedback'] 
+
+        # Store feedback in MongoDB
+        feedback_collection = feedbacks_db['feedbacks']
+        feedback_collection.insert_one({'name': name, 'email': email, 'feedback': feedback})
+        return render_template('final.html')
+        # Send thank you email
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

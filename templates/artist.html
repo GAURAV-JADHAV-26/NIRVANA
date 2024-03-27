@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -205,12 +206,19 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
-        h1 {
-            font-family: "Kode Mono", monospace;
-            color: #FECD1A;
-        }
         
+        .next-button {
+            background-color: #1ed760;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px 20px; /* Padding */
+        }
+        .next-button:hover {
+            background-color: #1ed760;
+            border: 2px solid black;
+        }     
 
     </style>
     
@@ -221,7 +229,6 @@
 </head>
 <body>
     <div class="container" id="container">
-        <h1 class="music-genres">Search For Your Favourite Artist</h1>
         <div class="search-container">
             <input type="text" id="artistSearch" placeholder="Search for an artist">
             <button id="searchButton" onclick="searchArtist()">Search</button>
@@ -231,6 +238,7 @@
         </div>
         <div id="selectedArtists" style="display: none;"></div>
         <button id="saveArtistsButton" onclick="saveArtists()" class="save-artists" style="display: none;">Save Artists</button>
+        <button onclick="redirectToFeatures()" class="next-button">Next</button>
     </div>
     
     <script>
@@ -251,7 +259,12 @@
                     data.forEach(artist => {
                         const card = document.createElement('div');
                         card.classList.add('card');
-                        card.style.backgroundImage = `url(${artist.image})`; // Set background image
+                        if (artist.image) {
+                            card.style.backgroundImage = `url(${artist.image})`; // Set background image
+                        } else {
+                            // If artist has no image, provide a default image from the static directory
+                            card.style.backgroundImage = `url('../static/images/image.png')`;
+                        }
                         card.innerHTML = `
                             <div class="card-content">${artist.name}</div>
                         `;
@@ -310,6 +323,9 @@
                 console.error('Error:', error);
             });
             console.log(selectedArtistsArray)
+        }
+        function redirectToFeatures() {
+            window.location.href = '/features';
         }
     </script>
 </body>

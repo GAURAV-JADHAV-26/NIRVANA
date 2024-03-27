@@ -4,25 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recommendations For You</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            background-image: url('../static/images/image4.png'); /* Replace 'background_image.jpg' with your image file */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin: 0 auto;
+            width: 80%;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        h2 {
+            flex: 1;
+        }
+        p {
+            margin-right: 20px;
+        }
+        iframe {
+            display: block;
+            margin: 0 auto;
+            width: 750px; /* Increase width */
+        }
+        input[type="checkbox"] {
+            margin-left: 20px;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #1DB954;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1ED760;
+        }
+        .track-number {
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2em; /* Increase font size */
+        }
+        .container ul {
+            counter-reset: track-counter; /* Reset the counter */
+        }
+        .container ul li {
+            counter-increment: track-counter; /* Increment the counter */
+        }
+        .container ul li .track-number::before {
+            content: counter(track-counter); /* Display the counter */
+            margin-right: 0.5em;
+        }
+    </style>
 </head>
 <body>
-    <h1>Recommendations For You</h1>
-    <form action="/save_playlist" method="post">
-        <ul>
-            {% for track in tracks %}
-                <li>
-                    <h2>{{ track.name }}</h2>
-                    <p>Artists: 
-                    {% for artist in track.artists %}
-                        {{ artist.name }}{% if not loop.last %}, {% endif %}
-                    {% endfor %}
-                    </p>
-                    <iframe src="https://open.spotify.com/embed/track/{{ track.id }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                    <input type="checkbox" name="track_ids" value="{{ track.id }}">
-                </li>
-            {% endfor %}
-        </ul>
-        <button type="submit">Save to Spotify</button>
-    </form>
+    <div class="container">
+        <h1>Recommendations For You</h1>
+        <form id="playlistForm" action="/save_playlist" method="post">
+            <ul>
+                {% for track in tracks %}
+                    <li>
+                        <span class="track-number"></span>
+                        <h2>{{ track.name }}</h2>
+                        <p>Artists: 
+                        {% for artist in track.artists %}
+                            {{ artist.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                        </p>
+                        <iframe src="https://open.spotify.com/embed/track/{{ track.id }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                        <input type="checkbox" name="track_ids" value="{{ track.id }}" checked> <!-- Add checked attribute -->
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Save to Spotify</button>
+        </form>
+    </div>
+    <script>
+        document.getElementById('playlistForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            // Redirect to final.html after form submission
+            window.location.href = "/final";
+        });
+    </script>
 </body>
 </html>
