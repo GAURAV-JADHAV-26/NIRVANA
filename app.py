@@ -299,7 +299,7 @@ mood_keywords = [
     "playful", "optimistic", "dramatic", "moody", "soothing", "bittersweet", "dark", "light",
     "inspiring", "nostalgic", "empowering", "whimsical", "ethereal", "triumphant", "mysterious",
     "enigmatic", "pensive", "tranquil", "enthusiastic", "euphoric", "thoughtful", "suspenseful",
-    "ecstatic", "brooding"
+    "ecstatic"
 ]
 mood_ranges = {
     "happy": {"valence_range": (0.6, 1.0), "energy_range": (0.6, 1.0), "tempo_range": (100, 180), "danceability_range": (0.5, 1.0)},
@@ -348,8 +348,7 @@ mood_ranges = {
     "euphoric": {"valence_range": (0.7, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (100, 160)},
     "thoughtful": {"valence_range": (0.3, 0.7), "energy_range": (0.2, 0.6), "tempo_range": (50, 100), "acousticness_range": (0.5, 1.0)},
     "suspenseful": {"valence_range": (0.2, 0.6), "energy_range": (0.6, 1.0), "tempo_range": (80, 120)},
-    "ecstatic": {"valence_range": (0.7, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (120, 180)},
-    "brooding": {"valence_range": (0.2, 0.6), "energy_range": (0.2, 0.6), "tempo_range": (60, 120), "acousticness_range": (0.5, 1.0)}
+    "ecstatic": {"valence_range": (0.7, 1.0), "energy_range": (0.7, 1.0), "tempo_range": (120, 180)}
 }
 def get_access_token():
     url = 'https://accounts.spotify.com/api/token'

@@ -11,18 +11,17 @@
         * {
             box-sizing: border-box;
         }
+        
         body {
-
             font-family: "Kode Mono", monospace;
-            background-image: url('../static/images/back.jpg');
+            background-image: url('../static/images/artists.png');
             background-size: cover;
             background-position: auto;
-
             color: #fff;
-            margin: 0; /* Add margin to body to prevent default margin */
-            padding: 0; /* Add padding to body to prevent default padding */
+            margin: 0;
+            padding: 0;
         }
-
+        
         /* Styles for the container */
         .container {
             display: flex;
@@ -33,7 +32,7 @@
         }
 
         .search-container {
-            margin-top: 20px; /* Add top margin for spacing */
+            margin-top: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -42,53 +41,92 @@
             font-size: 1.05rem;
             text-align: center;
             
-            
         }
 
         #artistSearch {
-            margin-right: 10px; /* Add margin between search bar and button */
+            margin-right: 10px;
             padding: 5px;
             border-radius: 5px;
             border: 1px solid #ddd;
-            width: 200px; /* Set the width of the search input */
-            background-color: rgba(0, 0, 0, 0.5); /* Set the background as semi transparent*/
+            width: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
             color: #fff;
             font-family: "Kode Mono", monospace;
             font-weight: 700;
             font-size: 1.05rem;
             text-align: center;
-                min-height: 3vh;
-                min-width: 10vw;
-
-
+            min-height: 3vh;
+            min-width: 10vw;
         }
 
+        #searchButton,
+        .next-button {
+            padding: 5px 20px; /* Adjust padding as needed */
+            background-color: #1ed760;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            height: 40px;
+            margin-left: 10px; /* Add some margin between buttons */
+        }
+
+        /* Additional CSS styles for the next button */
+        .next-button {
+            margin-left: 20px; /* Adjust the spacing between search and next buttons */
+        }
         .card {
             border: 1px solid #ddd;
             border-radius: 15px;
             margin: 10px;
-            width: 200px;
+            width: 189px;
             height: 240px;
             text-align: center;
-            background-size: cover; /* Set the background-size to cover */
+            background-size: cover;
             background-position: center;
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            background-color: #222;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #222; /* Darker card background color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box shadow */
         }
-
+        .card:hover {
+            border-color: #777;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+            transform: scale(1.05); /* Scale up on hover */
+        }
+        .card.selected {
+            background-color: rgba(255, 255, 255, 0.2); /* Light overlay for selected card */
+        }
+        .card-content {
+            opacity: 1; /* Always show the card content */
+            border-radius: 8px;
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
+            color: white;
+            padding: 5px;
+            box-sizing: border-box;
+            border-radius: 8px; /* Add border-radius to round the corners */
+            transition: background-color 0.3s; /* Add transition for background color */
+            text-transform: capitalize; /* Capitalize the text */
+        }
+        .card:hover .card-content {
+            background-color: #1ED760; /* Change background color of text on card hover */
+            color: black; /* Change text color to black on hover */
+        }
         .selected::after {
-            content: '\2665'; /* Unicode character for check mark */
+            content: '\2665';
             position: absolute;
             top: 10px;
             right: 10px;
             color: #1ED760;
             font-size: 30px;
         }
-
+        
         /* Styles for the search input and button */
         #artistSearch {
             margin-right: 10px;
@@ -102,15 +140,11 @@
             font-weight: 700;
             font-size: 1.05rem;
             text-align: center;
-            min-height: 40px; /* Adjust the height here */
-            line-height: 1; /* Ensure the height is applied correctly */
+            min-height: 40px;
+            line-height: 1;
             min-width: 14vw;
         }
-
-        .save-artists:hover {
-            border: 2px solid black;
-        }
-
+        
         #searchButton {
             margin-left: 10px;
             padding: 5px 10px;
@@ -119,21 +153,17 @@
             color: white;
             border-radius: 5px;
             cursor: pointer;
-            height: 40px; /* Adjust the height to match the search bar */
+            height: 40px;
         }
-
-        #searchButton:hover {
-            border: 2px solid black;
-            background-color:#1ed760;
-            
-        }
-
+        
         /* Styles for the searched cards */
         #artistResults {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            position: relative; /* Add this line */
         }
+        
         #artistResults .card {
             border: 1px solid #ddd;
             border-radius: 15px;
@@ -150,11 +180,7 @@
             background-color: #222;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        #artistResults .card:hover {
-            border-color: #777;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            transform: scale(1.05);
-        }
+        
         #artistResults .card-content {
             opacity: 1;
             border-radius: 8px;
@@ -169,11 +195,9 @@
             border-radius: 8px;
             transition: background-color 0.3s;
             text-transform: capitalize;
+            
         }
-        #artistResults .card:hover .card-content {
-            background-color: #1ED760;
-            color: black;
-        }
+        
         /* Styles for the submit button */
         button {
             padding: 10px 20px;
@@ -188,38 +212,55 @@
             display: block;
             margin: 20px auto;
         }
-        button:hover {
-            background-color: #1ED760;
-        }
-
+        
         .music-genres {
            font-size: 3rem;
             
             font-weight: bold;
             text-align: center;
         }
-
+        
         .save-artists {
-            background-color: #1ed760;
+            background-color: #D895DA;
             border: none;
             color: white;
             border-radius: 5px;
             cursor: pointer;
+            padding: 10px 20px;
+            margin: 20px auto;
+            display: none; /* Initially hidden */
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s; /* Adjusted duration and cubic-bezier function */
+            position: fixed; /* Fixed position */
+            bottom: 20px; /* Adjust as needed */
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Center horizontally */
         }
         
+        .save-artists:hover {
+            background-color: #912BBC; /* Change background color on hover */
+        }
+        
+        #searchButton,
         .next-button {
-            background-color: #1ed760;
+            padding: 5px 20px; /* Adjust padding as needed */
+            background-color: #D895DA;
             border: none;
             color: white;
             border-radius: 5px;
             cursor: pointer;
-            padding: 10px 20px; /* Padding */
+            height: 40px;
+            margin-left: 10px; /* Add some margin between buttons */
+            transition: background-color 0.3s; /* Add transition effect for background color */
         }
+        
+        #searchButton:hover,
         .next-button:hover {
-            background-color: #1ed760;
-            border: 2px solid black;
-        }     
-
+            background-color: #912BBC; /* Change background color on hover */
+        }
     </style>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -232,19 +273,18 @@
         <div class="search-container">
             <input type="text" id="artistSearch" placeholder="Search for an artist">
             <button id="searchButton" onclick="searchArtist()">Search</button>
+            <button onclick="redirectToFeatures()" class="next-button">Next</button>
         </div>
         <div id="artistResults">
             <!-- Cards with artist information will be dynamically generated here -->
         </div>
         <div id="selectedArtists" style="display: none;"></div>
         <button id="saveArtistsButton" onclick="saveArtists()" class="save-artists" style="display: none;">Save Artists</button>
-        <button onclick="redirectToFeatures()" class="next-button">Next</button>
     </div>
     
     <script>
         // Array to store selected artists
         const selectedArtistsArray = [];
-
         // Function to search for artists
         function searchArtist() {
             const searchTerm = document.getElementById('artistSearch').value;
@@ -252,11 +292,11 @@
                 .then(response => response.json())
                 .then(data => {
                     const container = document.getElementById('container');
-                    container.style.alignItems = 'flex-start'; // Align items to the top
                     const artistResults = document.getElementById('artistResults');
                     artistResults.innerHTML = ''; // Clear previous results
                     // Iterate over the data and create cards for each artist
-                    data.forEach(artist => {
+                    for (let i = 0; i < Math.min(data.length, 16); i++) {
+                        const artist = data[i];
                         const card = document.createElement('div');
                         card.classList.add('card');
                         if (artist.image) {
@@ -272,13 +312,12 @@
                             toggleSelection(card);
                         });
                         artistResults.appendChild(card);
-                    });
+                    }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
         }
-
         // Function to toggle selection of artists
         function toggleSelection(card) {
             if (card.classList.contains('selected')) {
@@ -322,7 +361,7 @@
             .catch(error => {
                 console.error('Error:', error);
             });
-            console.log(selectedArtistsArray)
+            console.log(selectedArtistsArray);
         }
         function redirectToFeatures() {
             window.location.href = '/features';
