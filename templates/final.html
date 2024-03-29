@@ -9,26 +9,26 @@
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
-            padding: 50px;
-            background-image: url('../static/images/yes.png'); /* Add your background image URL here */
-            background-size: cover; /* Cover the entire viewport */
-            background-position: center; /* Center the background image */
-            background-blend-mode: luminosity; /* Decrease brightness of the background image */
+            padding: 20px;
+            background-image: url('../static/images/yes.png');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: luminosity;
         }
         h1 {
-            font-size: 2em; /* Large font size for heading */
+            font-size: 2em;
             margin-bottom: 20px;
         }
         p {
-            font-size: 1.2em; /* Medium font size for paragraph */
+            font-size: 1.2em;
             margin-bottom: 30px;
         }
         .visit-again {
-            font-size: 1.2em; /* Medium font size */
-            background-color: transparent; /* Set background color to transparent */
-            color: #1DB954; /* Green text color */
+            font-size: 1.2em;
+            background-color: transparent;
+            color: #1DB954;
             padding: 10px 20px;
-            border: 1px solid #15f4ee; /* Add border with specified color */
+            border: 1px solid #15f4ee;
             border-radius: 5px;
             text-decoration: none;
             transition: background-color 0.3s;
@@ -36,8 +36,8 @@
         }
         
         .visit-again:hover {
-            background-color: #15f4ee; /* Change background color on hover */
-            color: white; /* Change text color on hover */
+            background-color: #15f4ee;
+            color: white;
         }
         .feedback-form {
             margin-top: 50px;
@@ -45,11 +45,11 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            background-color: rgba(255, 255, 255, 0.2); /* Very transparent white background */
+            background-color: rgba(255, 255, 255, 0.2);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
-            max-width: 500px; /* Limit form width */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -64,24 +64,24 @@
             border-radius: 5px;
             border: 1px solid #ccc;
             box-sizing: border-box;
-            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background for input fields */
-            color: #000; /* Text color for input fields */
+            background-color: rgba(255, 255, 255, 0.5);
+            color: #000;
         }
         .feedback-form textarea {
             height: 150px;
         }
         .feedback-form button {
             padding: 10px 20px;
-            background-color: transparent; /* Set background color to transparent */
+            background-color: transparent;
             color: white;
-            border: 1px solid #a972cb; /* Add border to maintain button shape */
+            border: 1px solid #a972cb;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         
         .feedback-form button:hover {
-            background-color: #a972cb; /* Change background color on hover */
+            background-color: #a972cb;
         }
         @keyframes bounce {
             0%, 100% {
@@ -89,6 +89,23 @@
             }
             50% {
                 transform: translateY(-20px);
+            }
+        }
+
+        /* Media Query for responsiveness */
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 10px; /* Reduce body padding for smaller screens */
+            }
+            h1 {
+                font-size: 1.5em; /* Decrease heading font size for smaller screens */
+            }
+            .visit-again {
+                margin-right: 0; /* Remove right margin for visit again link */
+                margin-bottom: 10px; /* Add bottom margin for better spacing */
+            }
+            .feedback-form {
+                max-width: 80%; /* Adjust maximum width of feedback form for smaller screens */
             }
         }
     </style>

@@ -21,29 +21,34 @@
         h1 {
             text-align: center;
         }
-        form {
-            margin: 0 auto;
-            width: 80%;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0; /* Remove any spacing between table cells */
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid white;
+            border-right: 1px solid white; /* Add border lines to the right of each cell */
         }
-        li {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
+        th:last-child, td:last-child {
+            border-right: none; /* Remove border line from the last cell in each row */
         }
-        h2 {
-            flex: 1;
+        th {
+            background-color: #1DB954;
+            color: white;
         }
-        p {
-            margin-right: 20px;
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.2);
         }
         iframe {
             display: block;
             margin: 0 auto;
-            width: 750px; /* Increase width */
+            width: 800px; /* Increase width of the player */
         }
         input[type="checkbox"] {
             margin-left: 20px;
@@ -66,39 +71,81 @@
             margin-right: 10px;
             font-size: 1.2em; /* Increase font size */
         }
-        .container ul {
-            counter-reset: track-counter; /* Reset the counter */
-        }
-        .container ul li {
-            counter-increment: track-counter; /* Increment the counter */
-        }
-        .container ul li .track-number::before {
-            content: counter(track-counter); /* Display the counter */
-            margin-right: 0.5em;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Recommendations For You</h1>
         <form id="playlistForm" action="/save_playlist" method="post">
-            <ul>
-                {% for track in tracks %}
-                    <li>
-                        <span class="track-number"></span>
-                        <h2>{{ track.name }}</h2>
-                        <p>Artists: 
-                        {% for artist in track.artists %}
-                            {{ artist.name }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                        </p>
-                        <iframe src="https://open.spotify.com/embed/track/{{ track.id }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                        <input type="checkbox" name="track_ids" value="{{ track.id }}" checked> <!-- Add checked attribute -->
-                    </li>
-                {% endfor %}
-            </ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Track</th>
+                        <th>Artists</th>
+                        <th>Preview</th>
+                        <th>Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for track in tracks %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ track.name }}</td>
+                            <td>
+                                {% for artist in track.artists %}
+                                    {{ artist.name }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <iframe class="player" src="https://open.spotify.com/embed/track/{{ track.id }}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media" data-uri="spotify:track:{{ track.id }}"></iframe>
+                            </td>
+                            <td><input type="checkbox" name="track_ids" value="{{ track.id }}" checked></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             <button type="submit">Save to Spotify</button>
         </form>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var players = document.querySelectorAll('.player');
+            var accessToken = '{{ session.get("access_token") }}'; // Retrieve the access token from the Flask session
+            
+            players.forEach(function (player) {
+                var uri = player.getAttribute('data-uri');
+                var playerInstance = new Spotify.Player({
+                    name: 'Web Playback SDK Quick Start Player',
+                    getOAuthToken: function (cb) {
+                        cb(accessToken);
+                    }
+                });
+
+                playerInstance.addListener('ready', ({ device_id }) => {
+                    console.log('Ready with Device ID', device_id);
+                    playerInstance._options.id = device_id;
+                    play({
+                        spotify_uri: uri,
+                        playerInstance
+                    });
+                });
+
+                playerInstance.connect();
+            });
+
+            function play({ spotify_uri, playerInstance: {_options: { id }} }) {
+                fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ uris: [spotify_uri] }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + accessToken
+                    },
+                });
+            }
+        });
+    </script>
 </body>
 </html>

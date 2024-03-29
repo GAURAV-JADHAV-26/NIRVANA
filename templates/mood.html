@@ -135,7 +135,7 @@
         }
         /* Remove hover effect */
         input[type="submit"]:hover {
-            background-color: #1ED760; /* Keep the same green color on hover */
+            background-color: #a972cb; /* Keep the same green color on hover */
         }
         /* Center and style the heading */
         .music-genres {
@@ -156,6 +156,16 @@
         }
         .music-genres {
             color:#2D3250 ;
+        }
+
+        /* Media queries for responsiveness */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px; /* Decrease padding */
+            }
+            .card {
+                width: calc(50% - 20px); /* Adjust card width for smaller screens */
+            }
         }
     </style>
 

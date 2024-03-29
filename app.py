@@ -695,6 +695,7 @@ def add_tracks_to_playlist(access_token, playlist_id, track_ids):
 
     response = requests.post(f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks', headers=headers, json=data)
     client.drop_database('music_db')
+    session.clear()
 @app.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
     if request.method == 'POST':

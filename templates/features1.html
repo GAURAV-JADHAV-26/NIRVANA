@@ -5,70 +5,89 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Spotify API Parameters</title>
 <style>   
-    body {
-        font-family: Arial, sans-serif;
-        background-image: url('../static/images/night.jpg'); /* Replace 'your-image-url.jpg' with the URL of your desired background image */
-        background-size: cover; /* Ensure the background image covers the entire body */
-        background-position: center; /* Center the background image */
+    @media only screen and (min-width: 768px) {
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+        }
+    }
+    .background-image {
+        background-image: url('../static/images/night1.jpg'); /* Replace with your high-resolution image URL */
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; /* Fix background image position */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
     }
 
     .card {
-        background-color: rgba(255, 255, 255, 0.8); /* Adjust the last value (0.8) to set the desired opacity */
+        background-color: rgba(255, 255, 255, 0.75); /* Adjust the opacity if needed */
         border-radius: 10px;
         padding: 20px;
+        margin: 20px auto 0; /* Adjust the top margin as needed */
         margin-bottom: 20px;
-        transition: transform 0.3s; /* Transition for hover effect */
+        transition: background-color 0.3s, transform 0.3s; /* Add transition for smoother effect */
+        max-width: 1200px; /* Adjust the max-width of the cards */
+        border: 2px solid silver; /* Silver border */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+    }
+    
+    .card:hover {
+        background-color: #a972cb; /* Change the background color to #DB3EB1 on hover */
+        border-color: #000; /* Change border color to black on hover */
     }
 
-
-.slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 25px;
-    border-radius: 5px;
-    background:  #9195F6;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-    margin-bottom: 10px;
-}
-
-.slider:hover {
-    opacity: 1;
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-}
-
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-}
-
-.slider-value {
-    font-size: 16px;
-    font-weight: bold;
-    position: relative;
-    bottom: 0px; /* Adjusted to ensure the value stays within the card */
-    left: 50%; /* Center horizontally */
-    transform: translateX(50%);
-    z-index: 1;
-}
+    .slider {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 15px;
+        border-radius: 5px;
+        background: #41C9E2; /* Neon blue color */
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+        margin-bottom: 10px;
+    }
+    
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #00BFFF; /* Light blue color for webkit */
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #00BFFF; /* Light blue color for moz */
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .slider-value {
+        font-size: 16px;
+        font-weight: bold;
+        position: relative;
+        bottom: 0px; /* Adjusted to ensure the value stays within the card */
+        left: 50%; /* Center horizontally */
+        transform: translateX(50%);
+        z-index: 1;
+    }
 
 .popup {
     display: none;
@@ -104,8 +123,8 @@
 }
 button[type="submit"] {
     display: block;
-    margin: 0 auto; /* Center the button */
-    padding: 10px 20px; /* Increase padding */
+    margin: 20px auto; /* Adjust the top margin as needed */
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     background-color: #00FFFF;
@@ -113,15 +132,59 @@ button[type="submit"] {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s; /* Transition for hover effect */
+    transition: background-color 0.3s;
 }
 
 button[type="submit"]:hover {
     background-color: #4CAF50; /* Change background color on hover */
 }
+@media only screen and (max-width: 767px) {
+    /* Adjust styles for smaller screens */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+    }
+
+    .background-image {
+        display: none; /* Hide background image on small screens */
+    }
+
+    .card {
+        margin: 10px auto; /* Adjust margin for smaller cards */
+    }
+
+    .slider-value {
+        display: none; /* Hide slider values on small screens */
+    }
+
+    .popup {
+        width: 80%; /* Adjust popup width for smaller screens */
+    }
+
+    button[type="submit"] {
+        display: block;
+        margin: 20px auto; /* Adjust the top margin as needed */
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #00FFFF;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #4CAF50; /* Change background color on hover */
+    }
+}
 </style>
 </head>
 <body>
+    <div class="background-image"></div>
     <div id="popup" class="popup">
         <div class="popup-content">
           <span class="close" onclick="closePopup()">&times;</span>

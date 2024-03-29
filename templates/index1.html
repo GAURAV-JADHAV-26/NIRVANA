@@ -15,6 +15,7 @@
             overflow: hidden; /* This will prevent scrollbars caused by the video */
             position: relative; /* Required for absolute positioning */
             transition: opacity 0.5s ease; /* Smooth transition effect */
+            font-family: 'Poppins', sans-serif; /* Use Poppins font */
         }
 
         /* Set opacity to 0 to hide the body during page transition */
@@ -47,6 +48,8 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
+            display: flex; /* Use flexbox for better alignment */
+            justify-content: center; /* Center align social icons horizontally */
         }
 
         .social-icons a {
@@ -71,7 +74,7 @@
         }
 
         /* Information about us */
-        .about-us {
+        .about-us, .about-project {
             display: none;
             position: fixed;
             top: 50%;
@@ -82,28 +85,23 @@
             color: #333;
             border-radius: 10px;
             z-index: 9999;
+            max-width: 80%; /* Set maximum width */
         }
 
-        .about-us p {
-            font-size: 1.2em;
-        }
-        .about-project {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #333;
-            border-radius: 10px;
-            z-index: 9999;
-        }
-        
-        .about-project p {
+        .about-us p, .about-project p {
             font-size: 1.2em;
         }
 
+        /* Media queries for responsiveness */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px; /* Decrease padding */
+            }
+
+            .social-icons {
+                bottom: 10px; /* Adjust position */
+            }
+        }
     </style>
 </head>
 <body>
