@@ -649,10 +649,8 @@ def main():
 def save_playlist():
     # Retrieve track IDs from the POST request
     track_ids = request.form.getlist('track_ids')
-
     # Get the user's access token (you need to implement this part)
     access_token = session.get('access_token')
-
     if access_token:
         # Create the playlist
         playlist_id = create_playlist(access_token)
@@ -660,15 +658,8 @@ def save_playlist():
         if playlist_id:
             # Add tracks to the playlist
             add_tracks_to_playlist(access_token, playlist_id, track_ids)
-
-            # Clear the session after saving playlist
-            session.clear()
-
-            # Clear MongoDB data (you need to implement this part)
-            # Clear MongoDB data (you need to implement this part)
-            client.drop_database('music_db')
-
-            return 'Playlist saved successfully!'
+            print('Playlist saved successfully!')
+            return render_template('final.html')
         else:
             return 'Failed to create playlist'
     else:
@@ -703,12 +694,7 @@ def add_tracks_to_playlist(access_token, playlist_id, track_ids):
     }
 
     response = requests.post(f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks', headers=headers, json=data)
-
-    if response.status_code != 201:
-        print('Failed to add tracks to playlist')
-@app.route('/final') 
-def final():
-    return render_template('final.html')
+    client.drop_database('music_db')
 @app.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
     if request.method == 'POST':

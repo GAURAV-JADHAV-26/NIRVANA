@@ -17,3 +17,4 @@
     </div>
 </body>
 </html>
+<form action="/submit_feedback" method="post">

@@ -4,20 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Spotify API Parameters</title>
-<style>    .slider-container {
-    margin-bottom: 40px;
-    position: relative;
-}    .slider-container {
-    margin-bottom: 40px;
-    position: relative;
-}
+<style>   
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url('../static/images/night.jpg'); /* Replace 'your-image-url.jpg' with the URL of your desired background image */
+        background-size: cover; /* Ensure the background image covers the entire body */
+        background-position: center; /* Center the background image */
+    }
+
+    .card {
+        background-color: rgba(255, 255, 255, 0.8); /* Adjust the last value (0.8) to set the desired opacity */
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: transform 0.3s; /* Transition for hover effect */
+    }
+
 
 .slider {
     -webkit-appearance: none;
     width: 100%;
     height: 25px;
-    border-radius: 5px; /* Curved ends */
-    background: linear-gradient(to right, #FF00FF, #00FFFF); /* Glitter effect */
+    border-radius: 5px;
+    background:  #9195F6;
     outline: none;
     opacity: 0.7;
     -webkit-transition: .2s;
@@ -35,7 +44,7 @@
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #4CAF50; /* Fluorescent color */
+    background: #4CAF50;
     cursor: pointer;
     position: relative;
     z-index: 1;
@@ -45,127 +54,135 @@
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #4CAF50; /* Fluorescent color */
+    background: #4CAF50;
     cursor: pointer;
     position: relative;
     z-index: 1;
 }
 
 .slider-value {
-    font-size: 16px; /* Improved font size */
+    font-size: 16px;
     font-weight: bold;
-    position: absolute;
-    bottom: -25px;
-    left: 0;
-    z-index: 0;
-}
-.bubbly-button {
-    padding: 10px 20px;
-    background-color: #1ED760;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease; /* Transition effect */
     position: relative;
-    overflow: hidden;
-}
-
-.bubbly-button:hover {
-    transform: scale(1.1); /* Increase size on hover */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add shadow on hover */
-}
-
-.bubbly-button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 300%;
-    height: 300%;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    transition: all 0.3s ease; /* Transition effect */
-    z-index: 0;
-    transform: translate(-50%, -50%);
-}
-
-.bubbly-button:hover::before {
-    width: 0;
-    height: 0;
-}
-
-.bubbly-button span {
-    position: relative;
+    bottom: 0px; /* Adjusted to ensure the value stays within the card */
+    left: 50%; /* Center horizontally */
+    transform: translateX(50%);
     z-index: 1;
 }
-p {
-    font-family: Arial, sans-serif; /* Improved font family */
-    font-size: 16px; /* Improved font size */
-    line-height: 1.5; /* Improved line height for better readability */
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    background: linear-gradient(to right, #FF71CD, #D895DA, #6AD4DD);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+}
+
+.popup-content {
+    text-align: center;
+    color: #fff;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+button[type="submit"] {
+    display: block;
+    margin: 0 auto; /* Center the button */
+    padding: 10px 20px; /* Increase padding */
+    border: none;
+    border-radius: 5px;
+    background-color: #00FFFF;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+button[type="submit"]:hover {
+    background-color: #4CAF50; /* Change background color on hover */
 }
 </style>
 </head>
 <body>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+          <span class="close" onclick="closePopup()">&times;</span>
+          <p>Welcome to the Spotify API Parameters page!</p>
+          <p>Here you can adjust various parameters to customize your Spotify experience.</p>
+          <p>Feel free to adjust the sliders to your preference.</p>
+        </div>
+      </div>
 <form action="/save_values1" method="post">
-    <div class="slider-container">
-        <p>Energy: Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.</p>
+    <div class="card">
+        <p><strong>Energy:</strong> Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.</p>
         <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="energySlider" name="energy">
-        <span id="energyValue" class="slider-value">0</span>
-        <button type="button" onclick="setDefault('energy')" class="bubbly-button"><span>Set Default</span></button>
+        <span class="slider-value" id="energyValue">0</span>
     </div>
 
-    <div class="slider-container">
-        <p>Tempo: The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.</p>
+    <div class="card">
+        <p><strong>Tempo:</strong> The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.</p>
         <input type="range" min="30" max="150" step="1" value="0" class="slider" id="tempoSlider" name="tempo">
-        <span id="tempoValue" class="slider-value">0</span>
-        <button type="button" onclick="setDefault('tempo')">Set Default</button>
+        <span class="slider-value" id="tempoValue">0</span>
     </div>
 
-    <div class="slider-container">
-        <p>Danceability: Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.</p>
+    <div class="card">
+        <p><strong>Danceability:</strong> Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.</p>
         <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="danceabilitySlider" name="danceability">
-        <span id="danceabilityValue" class="slider-value">0</span>
-        <button type="button" onclick="setDefault('danceability')">Set Default</button>
+        <span class="slider-value" id="danceabilityValue">0</span>
     </div>
 
-    <div class="slider-container">
-        <p>Acousticness: A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.</p>
+    <div class="card">
+        <p><strong>Acousticness:</strong> A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic.</p>
         <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="acousticnessSlider" name="acousticness">
-        <span id="acousticnessValue" class="slider-value">0</span>
-        <button type="button" onclick="setDefault('acousticness')">Set Default</button>
+        <span class="slider-value" id="acousticnessValue">0</span>
     </div>
 
-    <div class="slider-container">
-        <p>Loudness: The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude).</p>
+    <div class="card">
+        <p><strong>Loudness:</strong> The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude).</p>
         <input type="range" min="-20" max="-5" step="1" value="0" class="slider" id="loudnessSlider" name="loudness">
-        <span id="loudnessValue" class="slider-value">0</span>
-        <button type="button" onclick="setDefault('loudness')">Set Default</button>
+        <span class="slider-value" id="loudnessValue">0</span>
     </div>
-    <div class="slider-container">
-        <p>Speechiness: Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.</p>
+
+    <div class="card">
+        <p><strong>Speechiness:</strong> Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.</p>
         <input type="range" min="0.1" max="0.8" step="0.01" value="0.1" class="slider" id="speechinessSlider" name="speechiness">
-        <span id="speechinessValue" class="slider-value">0.1</span>
-        <button type="button" onclick="setDefault('speechiness')">Set Default</button>
+        <span class="slider-value" id="speechinessValue">0.1</span>
     </div>
 
-    <div class="slider-container">
-        <p>Valence: A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).</p>
+    <div class="card">
+        <p><strong>Valence:</strong> A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).</p>
         <input type="range" min="0.5" max="0.8" step="0.01" value="0.5" class="slider" id="valenceSlider" name="valence">
-        <span id="valenceValue" class="slider-value">0.5</span>
-        <button type="button" onclick="setDefault('valence')">Set Default</button>
+        <span class="slider-value" id="valenceValue">0.5</span>
     </div>
 
-    <div class="slider-container">
-        <p>Instrumentalness: Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.</p>
+    <div class="card">
+        <p><strong>Instrumentalness:</strong> Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.</p>
         <input type="range" min="0.0" max="0.3" step="0.01" value="0" class="slider" id="instrumentalnessSlider" name="instrumentalness">
-        <span id="instrumentalnessValue" class="slider-value">0</span>
-        <button type="button" onclick="setDefault('instrumentalness')">Set Default</button>
+        <span class="slider-value" id="instrumentalnessValue">0</span>
     </div>
     <button type="submit">Save Values</button>
 </form>
 
 <script>
+    
     const sliders = document.querySelectorAll(".slider");
     const defaultValues = {};
 
@@ -205,35 +222,51 @@ p {
         }
     });
 
-    function setDefault(attribute) {
-        if (defaultValues.hasOwnProperty(`${attribute}Slider`)) {
-            const slider = document.getElementById(`${attribute}Slider`);
-            const now = new Date();
-            const currentHour = now.getHours();
-            let timeSegment = "";
+    // Automatically set default values based on the time segment
+    function setDefaultValues() {
+        const now = new Date();
+        const currentHour = now.getHours();
+        let timeSegment = "";
 
-            if (6 <= currentHour && currentHour < 12) {
-                timeSegment = "morning";
-            } else if (12 <= currentHour && currentHour < 18) {
-                timeSegment = "afternoon";
-            } else if (18 <= currentHour && currentHour < 22) {
-                timeSegment = "evening";
-            } else {
-                timeSegment = "night";
+        if (6 <= currentHour && currentHour < 12) {
+            timeSegment = "morning";
+        } else if (12 <= currentHour && currentHour < 18) {
+            timeSegment = "afternoon";
+        } else if (18 <= currentHour && currentHour < 22) {
+            timeSegment = "evening";
+        } else {
+            timeSegment = "night";
+        }
+
+        for (const attribute in attributes[timeSegment]) {
+            if (attributes[timeSegment].hasOwnProperty(attribute)) {
+                const slider = document.getElementById(`${attribute}Slider`);
+                const defaultAverage = (attributes[timeSegment][attribute][0] + attributes[timeSegment][attribute][1]) / 2;
+                slider.value = defaultAverage;
+                slider.nextElementSibling.innerHTML = defaultAverage;
+
+                const percent = (defaultAverage - slider.min) / (slider.max - slider.min);
+                const thumbWidth = parseFloat(window.getComputedStyle(slider).getPropertyValue('width'));
+                const thumbPosition = percent * (thumbWidth - 25);
+                slider.nextElementSibling.style.left = `${thumbPosition}px`;
+
+                defaultValues[slider.id] = defaultAverage;
             }
-
-            const defaultAverage = (attributes[timeSegment][attribute][0] + attributes[timeSegment][attribute][1]) / 2;
-            slider.value = defaultAverage;
-            slider.nextElementSibling.innerHTML = defaultAverage;
-
-            const percent = (defaultAverage - slider.min) / (slider.max - slider.min);
-            const thumbWidth = parseFloat(window.getComputedStyle(slider).getPropertyValue('width'));
-            const thumbPosition = percent * (thumbWidth - 25);
-            slider.nextElementSibling.style.left = `${thumbPosition}px`;
-
-            defaultValues[slider.id] = defaultAverage;
         }
     }
+
+    // Call the function to set default values when the page loads
+    window.onload = function() {
+        // Show the pop-up
+        document.getElementById('popup').style.display = 'block';
+        
+        // Set default values
+        setDefaultValues();
+    };
+
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+    };
 </script>
 </body>
 </html>

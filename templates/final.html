@@ -10,7 +10,10 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 50px;
-            background : linear-gradient(90deg, #A100FFFF 0%, #71C4FFFF 100%);
+            background-image: url('../static/images/yes.png'); /* Add your background image URL here */
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the background image */
+            background-blend-mode: luminosity; /* Decrease brightness of the background image */
         }
         h1 {
             font-size: 2em; /* Large font size for heading */
@@ -22,16 +25,19 @@
         }
         .visit-again {
             font-size: 1.2em; /* Medium font size */
-            background-color: #ffffff; /* White background color */
+            background-color: transparent; /* Set background color to transparent */
             color: #1DB954; /* Green text color */
             padding: 10px 20px;
+            border: 1px solid #15f4ee; /* Add border with specified color */
             border-radius: 5px;
             text-decoration: none;
             transition: background-color 0.3s;
             margin-right: 20px;
         }
+        
         .visit-again:hover {
-            background-color: #C4E4FF; /* Light Purple background color on hover */
+            background-color: #15f4ee; /* Change background color on hover */
+            color: white; /* Change text color on hover */
         }
         .feedback-form {
             margin-top: 50px;
@@ -39,6 +45,16 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            background-color: rgba(255, 255, 255, 0.2); /* Very transparent white background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+            max-width: 500px; /* Limit form width */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .feedback-form h2 {
+            margin-bottom: 20px;
         }
         .feedback-form input[type="text"],
         .feedback-form textarea {
@@ -48,28 +64,38 @@
             border-radius: 5px;
             border: 1px solid #ccc;
             box-sizing: border-box;
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background for input fields */
+            color: #000; /* Text color for input fields */
         }
         .feedback-form textarea {
             height: 150px;
         }
         .feedback-form button {
             padding: 10px 20px;
-            background-color: #1DB954;
+            background-color: transparent; /* Set background color to transparent */
             color: white;
-            border: none;
+            border: 1px solid #a972cb; /* Add border to maintain button shape */
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
+        
         .feedback-form button:hover {
-            background-color: #1ED760;
+            background-color: #a972cb; /* Change background color on hover */
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
         }
     </style>
 </head>
 <body>
     <h1>Nirvana Playlist Created!</h1>
     <p>Your playlist has been successfully created. Enjoy your music!</p>
-    <p>Don't forget to visit us again for more recommendations!</p>
     <a href="/" class="visit-again">Visit Again</a>
 
     <!-- Feedback Form -->

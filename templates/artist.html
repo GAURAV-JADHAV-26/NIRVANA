@@ -261,6 +261,34 @@
         .next-button:hover {
             background-color: #912BBC; /* Change background color on hover */
         }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 20%; /* Adjusted top position */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #40A2D8, #EE4266, #FFD23F, #D895DA); /* Gradient background */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Box shadow */
+            z-index: 9999;
+            color: #fff; /* Text color */
+            font-family: "Kode Mono", monospace; /* Font family */
+            font-weight: 700; /* Font weight */
+        }
+        .popup-content {
+            text-align: center;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
     </style>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -269,6 +297,13 @@
 
 </head>
 <body>
+    <div class="popup" id="popup">
+        <button class="close-btn" onclick="closePopup()">X</button>
+        <div class="popup-content">
+            <h2>Welcome to Artist Search!</h2>
+            <p>Search for your favorite artists to discover their songs, albums, and more. Enter the name of an artist in the search bar and click the search button to get started!</p>
+        </div>
+    </div>
     <div class="container" id="container">
         <div class="search-container">
             <input type="text" id="artistSearch" placeholder="Search for an artist">
@@ -283,6 +318,30 @@
     </div>
     
     <script>
+        var popup = document.getElementById('popup');
+
+        // Display the popup when the page loads
+        window.onload = function() {
+            popup.style.display = 'block';
+        };
+
+        // Function to close the popup
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    
+        // Function to detect input in the search bar and close the popup
+        function detectInput() {
+            closePopup();
+            // You can add additional logic here if needed
+        }
+    
+        // Add an event listener to the search bar input field
+        document.getElementById('artistSearch').addEventListener('input', detectInput);
+
         // Array to store selected artists
         const selectedArtistsArray = [];
         // Function to search for artists

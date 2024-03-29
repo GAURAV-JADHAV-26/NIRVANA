@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +6,46 @@
     <title>Available Music Genres</title>
     <style>
         /* Styles for the cards */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #FF71CD, #3E5776, #D895DA, #6AD4DD); /* Gradient background */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* Box shadow */
+            z-index: 9999;
+        }
+        .popup-content {
+            text-align: center;
+            color: white;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        /* Button styles */
+        .btn {
+            display: block;
+            margin: 20px auto; /* Center the button horizontally */
+            padding: 10px 20px;
+            background-color: #1ED760; /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
         body {
             background-color: #52057B; /* Dark background color */
             color: #fff; /* Text color */
@@ -14,7 +53,7 @@
             font-weight: 700; /* Font weight */
             margin: 0; /* Remove default margin */
             padding: 0; /* Remove default padding */
-            background: linear-gradient( #FF71CD, #3E5776, #D895DA, #6AD4DD);
+            background: linear-gradient( #008DDA, #3E5776, #D895DA, #6AD4DD);
         }
         .container {
             display: flex;
@@ -138,6 +177,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="popup" id="popup">
+        <button class="close-btn" onclick="closePopup()">X</button>
+        <div class="popup-content">
+            <h2>Welcome to Music Genres!</h2>
+            <p>Music genres categorize music according to its sound, style, or theme. Genres can range from classical and jazz to rock, pop, hip-hop, and more. Explore different genres to find the music that resonates with you!</p>
+        </div>
+    </div>
     <h1 class="music-genres">AVAILABLE MUSIC GENRES</h1>
     
     <form action="/select_genres" method="post">
@@ -153,5 +199,21 @@
         </div>
         <input type="submit" value="Submit">
     </form>
+
+    <!-- JavaScript to display the popup when the page loads -->
+    <script>
+        // Get the popup element
+        var popup = document.getElementById('popup');
+
+        // Display the popup when the page loads
+        window.onload = function() {
+            popup.style.display = 'block';
+        };
+
+        // Function to close the popup
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
