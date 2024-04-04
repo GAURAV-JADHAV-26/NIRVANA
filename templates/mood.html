@@ -124,7 +124,7 @@
             display: block;
             margin: 20px auto; /* Center the button horizontally */
             padding: 10px 20px;
-            background-color: #1ED760; /* Green */
+            background-color: rgba(255, 255, 255, 0.2);
             border: none;
             color: white;
             text-align: center;
@@ -135,8 +135,9 @@
         }
         /* Remove hover effect */
         input[type="submit"]:hover {
-            background-color: #a972cb; /* Keep the same green color on hover */
+            background-color: #1ED760; /* Keep the same green color on hover */
         }
+
         /* Center and style the heading */
         .music-genres {
             text-align: center;
@@ -167,6 +168,146 @@
                 width: calc(50% - 20px); /* Adjust card width for smaller screens */
             }
         }
+
+
+        @property --k {
+            syntax: "<number>";
+            initial-value: 0;
+            inherits: false;
+        }
+
+
+        .music-genres {
+            color:#05DFD7;
+            --k: 0;
+            background: linear-gradient(90deg, hsl(calc(var(--k)*1turn), 95%, 65%), hsl(calc(var(--k)*1turn + 90deg), 95%, 65%));
+            -webkit-background-clip: text;
+            color: transparent;
+            filter: url(#f);
+
+            text-align: center;
+            text-transform: uppercase;
+            animation: anime 10s linear infinite;
+        }
+
+        @keyframes anime {
+            to {
+                --k: 1 ;
+            }
+        }
+
+
+
+
+        .neon {
+    position: relative;
+    display: inline-block;
+    transition: 0.5s;
+    overflow: hidden;
+    margin-right: 50px;
+}
+
+.neon:hover {
+    background: #1ED760;
+    color: #050801;
+    box-shadow: 0 0 5px #1ed760,
+        0 0 25px #1ed760,
+        0 0 50px #1ed760,
+        0 0 200px #1ED760;
+    -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+
+.neon span {
+    position: absolute;
+    display: block;
+}
+
+.neon span:nth-child(1) {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #1ED760);
+    animation: animate1 1s linear infinite;
+}
+
+@keyframes animate1 {
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 100%;
+    }
+}
+
+.neon span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg,
+            transparent, #1ED760);
+    animation: animate2 1s linear infinite;
+    animation-delay: 0.25s;
+}
+
+@keyframes animate2 {
+    0% {
+        top: -100%;
+    }
+
+    50%,
+    100% {
+        top: 100%;
+    }
+}
+
+.neon span:nth-child(3) {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #1ED760);
+    animation: animate3 1s linear infinite;
+    animation-delay: 0.50s;
+}
+
+@keyframes animate3 {
+    0% {
+        right: -100%;
+    }
+
+    50%,
+    100% {
+        right: 100%;
+    }
+}
+
+
+.neon span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #1ED760);
+    animation: animate4 1s linear infinite;
+    animation-delay: 0.75s;
+}
+
+@keyframes animate4 {
+    0% {
+        bottom: -100%;
+    }
+
+    50%,
+    100% {
+        bottom: 100%;
+    }
+}
+
     </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -198,7 +339,7 @@
             </label>
             {% endfor %}
         </div>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" class="neon">
     </form>
 
     <!-- JavaScript to display the popup when the page loads -->

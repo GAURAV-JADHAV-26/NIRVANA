@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Action</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('../static/437902.jpg'); /* Add your background image path here */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: row; /* Change flex direction to row */
+            justify-content: center;
+            align-items: center;
+        }
+        .button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid transparent; /* Make border transparent initially */
+            border-radius: 5px;
+            background-color: transparent; /* Make background transparent initially */
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease; /* Add smooth transition */
+        }
+        .button:hover {
+            background-color: rgba(0, 123, 255, 0.5); /* Add transparent background color on hover */
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="/music_by_music">
+            <button type="submit" class="button">Get Music By Music</button>
+        </form>
+        <form action="/genre">
+            <button type="submit" class="button">Get Customized Recommendations</button>
+        </form>
+    </div>
+</body>
+</html>

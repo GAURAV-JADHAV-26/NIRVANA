@@ -132,24 +132,6 @@
         .checkmark:hover {
             transform: scale(1.2); /* Scale up on hover */
         }
-        /* Styles for the submit button */
-        input[type="submit"] {
-            display: block;
-            margin: 20px auto; /* Center the button horizontally */
-            padding: 10px 20px;
-            background-color: #1ED760; /* Green */
-            border: none;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        /* Remove hover effect */
-        input[type="submit"]:hover {
-            background-color: #a972cb; /* Keep the same green color on hover */
-        }
         /* Center and style the heading */
         .music-genres {
             text-align: center;
@@ -180,11 +162,277 @@
                 width: calc(50% - 20px); /* Adjust card width for smaller screens */
             }
         }
+
+                /* Styles for the cards */
+                body {
+            background-color: #52057B; /* Dark background color */
+            color: #fff; /* Text color */
+            font-family: "Kode Mono", monospace; /* Font family */
+            font-weight: 700; /* Font weight */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            background: linear-gradient(#201658,#1D24CA,#98ABEE,#38419D);
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px; /* Add some padding */
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            margin: 10px;
+            width: 189px;
+            height: 240px;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            background-color: #222; /* Darker card background color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add box shadow */
+        }
+        .card:hover {
+            border-color: #777;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+            transform: scale(1.05); /* Scale up on hover */
+        }
+        .card.selected {
+            background-color: rgba(255, 255, 255, 0.2); /* Light overlay for selected card */
+        }
+        .card-content {
+            opacity: 1; /* Always show the card content */
+            border-radius: 8px;
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
+            color: white;
+            padding: 5px;
+            box-sizing: border-box;
+            border-radius: 8px; /* Add border-radius to round the corners */
+            transition: background-color 0.3s; /* Add transition for background color */
+            text-transform: capitalize; /* Capitalize the text */
+        }
+        .card:hover .card-content {
+            background-color: #1ED760; /* Change background color of text on card hover */
+            color: black; /* Change text color to black on hover */
+        }
+        .checkmark {
+            position: absolute;
+            top: 10px; /* Shift to top */
+            right: 10px; /* Shift to right */
+            height: 30px;
+            width: 30px;
+            background-color: transparent; /* Remove circle background */
+            display: none; /* Hide checkmark by default */
+            transition: all 0.3s ease; /* Add transition effect */
+        }
+        .checkbox-container {
+            vertical-align: top; /* Add this line to align elements at the top */
+        }
+        .checkbox-container input:checked + .checkmark {
+            display: block; /* Display checkmark when input is checked */
+        }
+        .checkmark:after {
+            content: '\2665'; /* Unicode for heart symbol */
+            font-size: 30px; /* Increase font size */
+            color: #7FFF00; /* Pink color */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the heart symbol */
+        }
+        .checkmark:hover {
+            transform: scale(1.2); /* Scale up on hover */
+        }
+        /* Styles for the submit button */
+
+        /* Center and style the heading */
+        .music-genres {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 2px solid #FFFFFF; /* White border bottom */
+            padding-bottom: 10px;
+            width: 100%;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #FFFFFF; /* White border top */
+            width: 80%;
+            margin: auto;
+        }
+
+        @property --k {
+            syntax: "<number>";
+            initial-value: 0;
+            inherits: false;
+        }
+
+
+        .music-genres {
+            color:#05DFD7;
+            --k: 0;
+            background: linear-gradient(90deg, hsl(calc(var(--k)*1turn), 95%, 65%), hsl(calc(var(--k)*1turn + 90deg), 95%, 65%));
+            -webkit-background-clip: text;
+            color: transparent;
+            filter: url(#f);
+
+            text-align: center;
+            text-transform: uppercase;
+            animation: anime 10s linear infinite;
+        }
+
+        @keyframes anime {
+            to {
+                --k: 1 ;
+            }
+        }
+
+
+
+
+        .neon {
+            position: relative;
+            display: inline-block;
+            transition: 0.5s;
+            overflow: hidden;
+            margin-right: 50px;
+            background-color: transparent;
+        }
+
+.neon:hover {
+    background: #1ED760;
+    color: #050801;
+    box-shadow: 0 0 5px #1ed760,
+        0 0 25px #1ed760,
+        0 0 50px #1ed760,
+        0 0 200px #1ED760;
+    -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+
+.neon span {
+    position: absolute;
+    display: block;
+}
+
+.neon span:nth-child(1) {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #1ED760);
+    animation: animate1 1s linear infinite;
+}
+
+@keyframes animate1 {
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 100%;
+    }
+}
+
+.neon span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg,
+            transparent, #1ED760);
+    animation: animate2 1s linear infinite;
+    animation-delay: 0.25s;
+}
+
+@keyframes animate2 {
+    0% {
+        top: -100%;
+    }
+
+    50%,
+    100% {
+        top: 100%;
+    }
+}
+
+.neon span:nth-child(3) {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #1ED760);
+    animation: animate3 1s linear infinite;
+    animation-delay: 0.50s;
+}
+
+@keyframes animate3 {
+    0% {
+        right: -100%;
+    }
+
+    50%,
+    100% {
+        right: 100%;
+    }
+}
+
+
+.neon span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #1ED760);
+    animation: animate4 1s linear infinite;
+    animation-delay: 0.75s;
+}
+
+@keyframes animate4 {
+    0% {
+        bottom: -100%;
+    }
+
+    50%,
+    100% {
+        bottom: 100%;
+    }
+}
+
+
+
+    input[type="submit"] {
+            display: block;
+            margin: 20px auto; /* Center the button horizontally */
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.2); /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        /* Remove hover effect */
+        input[type="submit"]:hover {
+            background-color: #1ED760; /* Keep the same green color on hover */
+        }
     </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400.700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="popup" id="popup">
@@ -197,7 +445,7 @@
     <h1 class="music-genres">AVAILABLE MUSIC GENRES</h1>
     
     <form action="/select_genres" method="post">
-        <div class="container">
+        <div class="container" >
             <!-- Cards with selectable genres and images will be dynamically generated here -->
             {% for genre in genres %}
             <label class="checkbox-container card" style="background-image: url('{{ url_for('static', filename=genre['image']) }}')">
@@ -207,7 +455,8 @@
             </label>
             {% endfor %}
         </div>
-        <input type="submit" value="Submit">
+
+        <input type="submit" value="Submit" class="neon">        
     </form>
 
     <!-- JavaScript to display the popup when the page loads -->

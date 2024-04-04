@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+</head>
+<body>
+    {% if title %}
+    <h2>Music identified:</h2>
+    <p><strong>Title:</strong> {{ title }}</p>
+    <p><strong>Artist:</strong> {{ artist }}</p>
+    <form action="/confirm" method="post">
+        <input type="hidden" name="title" value="{{ title }}">
+        <input type="hidden" name="artist" value="{{ artist }}">
+        <button type="submit" name="confirmation" value="yes">Yes</button>
+        <button type="submit" name="confirmation" value="no">No</button>
+    </form>
+    {% elif error %}
+    <p>{{ error }}</p>
+    {% endif %}
+</body>
+</html>

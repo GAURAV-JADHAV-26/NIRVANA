@@ -9,7 +9,10 @@ import pymongo
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-
+import shazamio
+import sounddevice as sd
+import soundfile as sf
+import tempfile
 import threading
 import os
 
@@ -35,6 +38,33 @@ TOKEN_URL = 'https://accounts.spotify.com/api/token'
 client_credentials_manager = SpotifyClientCredentials(client_id='1b1b24fc94f2465f92cf10b64d1317da', client_secret='c88f8847d6ef4a60b8c7003318867932')
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 sp_oauth = SpotifyOAuth(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, scope=SCOPE)
+
+def get_track_recommendations(title, artist):
+    # Search for the track
+    results = sp.search(q=f'track:{title} artist:{artist}', type='track', limit=1)
+
+    # Extract track ID
+    track_id = results['tracks']['items'][0]['id']  # Assuming the first track in the search results
+
+    # Get track recommendations based on the seed track
+    recommendations = sp.recommendations(seed_tracks=[track_id], limit=50)
+    track_ids = [track['id'] for track in recommendations['tracks']]
+    return track_ids
+def record_audio(duration, samplerate=44100, channels=2):
+    print("Recording audio...")
+    recording = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=channels, dtype='int16')
+    sd.wait()
+    return recording, samplerate
+
+def save_audio(recording, filename, samplerate):
+    sf.write(filename, recording, samplerate)
+
+async def identify_music(filename):
+    print("Identifying music...")
+    shazam = shazamio.Shazam()
+    # Use recognize instead of recognize_song
+    track = await shazam.recognize(filename)
+    return track
 def get_track_info(track_id, access_token):
     headers = {
         'Authorization': 'Bearer ' + access_token
@@ -369,7 +399,10 @@ def search_artist(query):
         image_url = images[0]['url'] if images else ''  # Use the first image if available
         artists.append({'id': artist['id'], 'name': artist['name'], 'image': image_url})
     return artists
-
+def check_language_availability(genre):
+    # Search for top artists in the specified genre
+    artists = sp.search(q=f'genre:"{genre}"', type='artist', limit=1)
+    return len(artists['artists']['items']) > 0
 @app.route('/')
 def index():
     auth_url = f'{AUTHORIZE_URL}?client_id={CLIENT_ID}&response_type=code&redirect_uri={REDIRECT_URI}&scope={SCOPE}'
@@ -399,7 +432,47 @@ def callback():
     
     # Storing access token in session
     session['access_token'] = token_info.get('access_token', None)
-    return redirect('/genre')
+    return render_template('selector.html')
+
+@app.route('/music_by_music', methods=['GET', 'POST'])
+def music_by_music():
+    if request.method == 'POST':
+        duration = 10  # Recording duration in seconds
+        filename = tempfile.NamedTemporaryFile(suffix='.wav', delete=False).name
+
+        recording, samplerate = record_audio(duration)
+        save_audio(recording, filename, samplerate)
+
+        # Use asyncio.run to await the asynchronous function
+        track = asyncio.run(identify_music(filename))
+
+        if track:
+            title = track['track']['title']
+            artist = track['track']['subtitle']
+            os.remove(filename)
+            return render_template('result.html', title=title, artist=artist)
+        else:
+            os.remove(filename)
+            return render_template('result.html', error="Could not identify music.")
+
+    return render_template('music_by_music.html')
+@app.route('/confirm', methods=['POST'])
+def confirm():
+    confirmation = request.form.get('confirmation')
+    if confirmation == 'no':
+        return redirect(url_for('music_by_music'))
+
+    # If 'Yes' is clicked, proceed with processing the identified music
+    title = request.form.get('title')
+    artist = request.form.get('artist')
+    recommendations=get_track_recommendations(title, artist)
+    # Process the identified music as needed
+    track_info_list = []
+    for track_id in recommendations:
+        track_info = get_track_info(track_id,session.get('access_token') )
+        if track_info:
+            track_info_list.append(track_info)
+    return render_template('playback.html', tracks=track_info_list)
 @app.route('/genre')
 def genre():
     access_token = session.get('access_token')
@@ -553,7 +626,7 @@ def main():
         'genre': {'$exists': True, '$ne': None}
     }
     Genre_Artist_Combination = collection.count_documents(query1)
-    cursor_query1 = collection.find(query1, {'_id': 0, 'track_data': {'$slice': 5}})
+    cursor_query1 = collection.find(query1, {'_id': 0, 'track_data': {'$slice': 10}})
     document_counter = 0
 
     # Iterate over documents
@@ -575,7 +648,7 @@ def main():
         'mood': {'$exists': True}
     }
     Mood = collection.count_documents(query2)
-    cursor_query2 = collection.find(query2, {'_id': 0, 'track_data': {'$slice': 4}})
+    cursor_query2 = collection.find(query2, {'_id': 0, 'track_data': {'$slice': 9}})
     document_counter = 0
 
     for document in cursor_query2:
@@ -597,7 +670,7 @@ def main():
         'genre': None
     }
     Artist_only = collection.count_documents(query3)
-    cursor_query3 = collection.find(query3, {'_id': 0, 'track_data': {'$slice': 3}})
+    cursor_query3 = collection.find(query3, {'_id': 0, 'track_data': {'$slice': 8}})
     document_counter = 0
 
     for document in cursor_query3:
@@ -619,7 +692,7 @@ def main():
         'genre': {'$exists': True}
     }
     Genre_only = collection.count_documents(query4)
-    cursor_query4 = collection.find(query4, {'_id': 0, 'track_data': {'$slice': 2}})
+    cursor_query4 = collection.find(query4, {'_id': 0, 'track_data': {'$slice': 7}})
     document_counter = 0
 
     for document in cursor_query4:
@@ -717,4 +790,5 @@ def submit_feedback():
         # Send thank you email
 
 if __name__ == '__main__':
+    import asyncio
     app.run(debug=True, port=8080)

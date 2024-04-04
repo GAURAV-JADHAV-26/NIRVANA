@@ -14,18 +14,6 @@
 
 
 
-body {
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: url('../images/background.avif') no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
-
 
 
 header {
@@ -154,7 +142,6 @@ header {
     background-color: #1db954; /* Set the button background color to green */
     color: #fff;
     text-decoration: none;
-    border-radius: 20px; /* Add rounded corners to the button */
     transition: background-color 0.3s ease;
     align-content: center;
 }
@@ -170,4 +157,557 @@ header {
     border-radius: 50%;
     vertical-align: middle;
 
+}
+
+@property --k {
+    syntax: "<number>";
+    initial-value: 0;
+    inherits: false;
+  }
+
+
+  @keyframes anime {
+    to {
+      --k: 1 ;
+    }
+  }
+h1 {
+
+    --k: 0;
+    background: linear-gradient(90deg, hsl(calc(var(--k)*1turn), 95%, 65%), hsl(calc(var(--k)*1turn + 90deg), 95%, 65%));
+    -webkit-background-clip: text;
+    color: transparent;
+    filter: url(#f);
+
+    text-align: center;
+    text-transform: uppercase;
+    animation: anime 10s linear infinite;
+
+  }
+
+
+
+  .neon {
+    position: relative;
+    display: inline-block;
+    transition: 0.5s;
+    overflow: hidden;
+    margin-right: 50px;
+}
+
+.neon:hover {
+    background: #1ED760;
+    color: #050801;
+    box-shadow: 0 0 5px #1ed760,
+        0 0 25px #1ed760,
+        0 0 50px #1ed760,
+        0 0 200px #1ED760;
+    -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+
+.neon span {
+    position: absolute;
+    display: block;
+}
+
+.neon span:nth-child(1) {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #1ED760);
+    animation: animate1 1s linear infinite;
+}
+
+@keyframes animate1 {
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 100%;
+    }
+}
+
+.neon span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg,
+            transparent, #1ED760);
+    animation: animate2 1s linear infinite;
+    animation-delay: 0.25s;
+}
+
+@keyframes animate2 {
+    0% {
+        top: -100%;
+    }
+
+    50%,
+    100% {
+        top: 100%;
+    }
+}
+
+.neon span:nth-child(3) {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #1ED760);
+    animation: animate3 1s linear infinite;
+    animation-delay: 0.50s;
+}
+
+@keyframes animate3 {
+    0% {
+        right: -100%;
+    }
+
+    50%,
+    100% {
+        right: 100%;
+    }
+}
+
+
+.neon span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #1ED760);
+    animation: animate4 1s linear infinite;
+    animation-delay: 0.75s;
+}
+
+@keyframes animate4 {
+    0% {
+        bottom: -100%;
+    }
+
+    50%,
+    100% {
+        bottom: 100%;
+    }
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* This will prevent scrollbars caused by the video */
+    position: relative; /* Required for absolute positioning */
+    transition: opacity 0.5s ease; /* Smooth transition effect */
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+}
+
+/* Set opacity to 0 to hide the body during page transition */
+body.loading {
+    opacity: 0;
+}
+#background-video {
+    position: fixed;
+    right: 0;
+    bottom: -30px;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1; /* Ensure the video is behind other elements */
+    object-fit: cover; /* Cover the entire viewport */
+}
+
+.container {
+    position: relative; /* Ensure the container stays on top of the video */
+    z-index: 1;
+    text-align: center;
+    padding: 20px;
+    color: white;
+}
+
+.social-icons {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; /* Use flexbox for better alignment */
+    justify-content: center; /* Center align social icons horizontally */
+}
+
+.social-icons a {
+    margin: 0 10px; /* Adjust margin */
+    display: inline-block;
+    transition: transform 0.3s ease; /* Add transition effect */
+    z-index: 9999;
+}
+
+.social-icons a:hover {
+    transform: scale(1.2); /* Increase size on hover */
+}
+
+.social-icons img {
+    width: 30px; /* Decrease width */
+    height: auto; /* Maintain aspect ratio */
+}
+
+
+.github {
+    border-radius: 50%;
+}
+
+
+
+.navigation a {
+    color: white;
+    text-decoration: none;
+    cursor: pointer; /* Add pointer cursor */
+}
+
+/* Information about us */
+.about-us, .about-project {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border-radius: 10px;
+    z-index: 9999;
+    max-width: 80%; /* Set maximum width */
+}
+
+.about-us p, .about-project p {
+    font-size: 1.2em;
+}
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 10px; /* Decrease padding */
+    }
+
+    .social-icons {
+        bottom: 10px; /* Adjust position */
+    }
+}
+
+
+
+/*ENDDDDDDDDDDDD*/
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+.nlogo {
+    border-radius: 50%;
+    width: 50px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+}
+
+
+
+
+body {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('../images/background.avif') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+
+
+
+header {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 99;
+}
+
+.logo {
+
+    font-size: 2em;
+    color: #fff;
+    
+}
+
+.navigation a {
+
+    position: relative;
+    font-size: 1.1 em;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 40px;
+}
+
+.navigation a::after {
+
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 3px;
+    background: #1ed760;
+    border-radius: 5px;
+    transform-origin: right ;
+    transform: scaleX(0);
+    transition: transform .5s;
+
+}
+
+
+.navigation a:hover:after {
+    transform-origin: left;
+    transform: scaleX(1);
+}
+
+
+.navigation .btnLogin-popup {
+
+    width: 130px;
+    height: 50px;
+    background: transparent;
+    border: 2px solid #fff;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: #fff;
+    font-weight: 500;
+    margin-left: 40px;
+    transition: .5s;
+}
+
+.navigation .btnLogin-popup:hover {
+
+    background: #fff;
+    color: #162938;
+}
+
+
+.container .btnLogin-popup {
+
+    
+    height: 50px;
+    padding: 10px;
+    text-align: center;
+    background: transparent;
+    border: 2px solid #fff;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: #fff;
+    font-weight: 500;
+    
+    transition: .5s;
+}
+
+
+.container {
+    text-align: center;
+    border: #1ed760;
+    
+}
+
+.h1 {
+    margin-bottom: 20px;
+
+}
+
+.quote {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color:#fff ;
+}
+
+
+.container .btnLogin-popup:hover {
+
+    background-color: var(--background-base,#1ed760);
+    color: #162938;
+}
+
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: transparent; /* Set the button background color to green */
+    color: #fff;
+    text-decoration: none;
+
+    transition: background-color 0.3s ease;
+    align-content: center;
+}
+
+.spotify-logo {
+    width: 30px;
+    height: auto;
+    margin-right: 10px;
+    border-radius: 50%;
+    vertical-align: middle;
+
+}
+
+@property --k {
+    syntax: "<number>";
+    initial-value: 0;
+    inherits: false;
+  }
+
+
+  @keyframes anime {
+    to {
+      --k: 1 ;
+    }
+  }
+h1 {
+
+    --k: 0;
+    background: linear-gradient(90deg, hsl(calc(var(--k)*1turn), 95%, 65%), hsl(calc(var(--k)*1turn + 90deg), 95%, 65%));
+    -webkit-background-clip: text;
+    color: transparent;
+    filter: url(#f);
+
+    text-align: center;
+    text-transform: uppercase;
+    animation: anime 10s linear infinite;
+
+  }
+
+
+
+  .neon {
+    position: relative;
+    display: inline-block;
+    transition: 0.5s;
+    overflow: hidden;
+    margin-right: 50px;
+}
+
+.neon:hover {
+    background: #1ED760;
+    color: #050801;
+    box-shadow: 0 0 5px #1ed760,
+        0 0 25px #1ed760,
+        0 0 50px #1ed760,
+        0 0 200px #1ED760;
+    -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+
+.neon span {
+    position: absolute;
+    display: block;
+}
+
+.neon span:nth-child(1) {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #1ED760);
+    animation: animate1 1s linear infinite;
+}
+
+@keyframes animate1 {
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 100%;
+    }
+}
+
+.neon span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg,
+            transparent, #1ED760);
+    animation: animate2 1s linear infinite;
+    animation-delay: 0.25s;
+}
+
+@keyframes animate2 {
+    0% {
+        top: -100%;
+    }
+
+    50%,
+    100% {
+        top: 100%;
+    }
+}
+
+.neon span:nth-child(3) {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #1ED760);
+    animation: animate3 1s linear infinite;
+    animation-delay: 0.50s;
+}
+
+@keyframes animate3 {
+    0% {
+        right: -100%;
+    }
+
+    50%,
+    100% {
+        right: 100%;
+    }
+}
+
+
+.neon span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #1ED760);
+    animation: animate4 1s linear infinite;
+    animation-delay: 0.75s;
+}
+
+@keyframes animate4 {
+    0% {
+        bottom: -100%;
+    }
+
+    50%,
+    100% {
+        bottom: 100%;
+    }
 }

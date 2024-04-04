@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .card {
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .checkbox-label {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Language Search</h1>
+        <form action="/language" method="post">
+            <label for="language">Search for a language:</label>
+            <input type="text" id="language" name="language">
+            <button type="submit">Search</button>
+        </form>
+        {% if language %}
+        <div class="card">
+            <div class="checkbox-container">
+                <input type="checkbox" id="language-checkbox" name="language-checkbox" value="{{ language }}">
+                <label for="language-checkbox" class="checkbox-label">{{ language }}</label>
+            </div>
+        </div>
+        <form action="/genre" method="get">
+            <button type="submit">Next</button>
+        </form>
+        {% endif %}
+    </div>
+</body>
+</html>
