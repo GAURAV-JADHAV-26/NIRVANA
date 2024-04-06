@@ -39,15 +39,39 @@ client_credentials_manager = SpotifyClientCredentials(client_id='1b1b24fc94f2465
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 sp_oauth = SpotifyOAuth(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, scope=SCOPE)
 
+def search_genre(genre):
+    # Authenticate with Spotify API
+    client_credentials_manager = SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+    sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+    
+    # Search for artists associated with the given genre
+    results = sp.search(q='genre:"{}*"'.format(genre), type='artist')
+    
+    # Check if any artists were found
+    if results['artists']['total'] > 0:
+        genres = []
+        for artist in results['artists']['items']:
+            for g in artist['genres']:
+                if g.startswith(genre):
+                    genres.append({'name': g, 'image': artist.get('images')[0]['url']})  # Add genre name and image URL to the list
+        return genres
+    else:
+        return []  # Return an empty list if no artists were found
+
 def get_track_recommendations(title, artist):
     # Search for the track
     results = sp.search(q=f'track:{title} artist:{artist}', type='track', limit=1)
-
+    if(len(results['tracks']['items']) == 0): #error handling 
+        results = sp.search(q=artist, type='artist', limit=1)  
+        artist_id = results['artists']['items'][0]['id']
+        recommendations = sp.recommendations(seed_artists=[artist_id], limit=20)
+        track_ids = [track['id'] for track in recommendations['tracks']]
+        return track_ids
     # Extract track ID
     track_id = results['tracks']['items'][0]['id']  # Assuming the first track in the search results
 
     # Get track recommendations based on the seed track
-    recommendations = sp.recommendations(seed_tracks=[track_id], limit=50)
+    recommendations = sp.recommendations(seed_tracks=[track_id], limit=20)
     track_ids = [track['id'] for track in recommendations['tracks']]
     return track_ids
 def record_audio(duration, samplerate=44100, channels=2):
@@ -494,6 +518,14 @@ def select_genres():
     selected_genres = request.form.getlist('selected_genres')
     session['selected_genres'] = selected_genres
     return redirect('/mood')
+@app.route('/trial', methods=['POST'])
+def handle_trial():
+    data = request.json
+    if data and 'genre' in data:
+        searched_genre = data['genre']
+        searched_genre=searched_genre.lower()
+        gena=search_genre(searched_genre)
+    return gena
 @app.route('/mood')
 def mood():
     return render_template('mood.html', keywords=mood_keywords)
@@ -550,6 +582,25 @@ def main():
     selected_artists = session.get('selected_artists', [])
     selected_genres = session.get('selected_genres', [])
     selected_moods = session.get('selected_keywords', [])
+    if not selected_artists and not selected_genres and not selected_moods:
+        playlists = sp.featured_playlists(limit=5)
+        all_track_ids = []
+        for playlist in playlists['playlists']['items']:
+            playlist_info = {
+                'name': playlist['name'],
+                'id': playlist['id'],
+                'owner': playlist['owner']['id']
+            }
+            # Get tracks for the playlist
+            tracks = sp.playlist_tracks(playlist['id'], limit=5)  # Limiting to 5 tracks per playlist
+            playlist_info['track_ids'] = [track['track']['id'] for track in tracks['items']]
+            all_track_ids.extend(playlist_info['track_ids'])
+        track_info_list = []
+        for track_id in all_track_ids:
+            track_info = get_track_info(track_id,session.get('access_token') )
+            if track_info:
+                track_info_list.append(track_info)
+        return render_template('playback.html', tracks=track_info_list)
     session_features = [
                         session.get('energy', 0),
                         session.get('tempo', 0),

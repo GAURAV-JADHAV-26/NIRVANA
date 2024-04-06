@@ -4,11 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Recognition</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('../static/bg_5_1920.jpg'); /* Add your background image path here */
+            background-size: cover;
+            background-position: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .title {
+            margin-bottom: 20px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid white;
+            border-radius: 5px;
+            background-color: transparent;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #42213D; /* Fill in on hover */
+        }
+
+        .description {
+            margin-top: 20px;
+            font-size: 24px; /* Increase font size */
+            transition: font-size 0.5s ease; /* Smooth transition */
+        }
+
+        .title-listening {
+            opacity: 0; /* Initially hidden */
+            animation: fadeIn 2s forwards; /* Fade in animation */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
     <h1>Music Recognition</h1>
     <form method="post" enctype="multipart/form-data">
-        <input type="submit" value="Identify Music">
+        <input type="submit" value="Identify Music" onclick="displayListening()">
     </form>
+    <p class="description">We will recognize your music and recommend similar music.</p>
+    <script>
+        function displayListening() {
+            document.querySelector('.description').innerHTML = 'Listening Now...';
+        }
+    </script>
 </body>
 </html>

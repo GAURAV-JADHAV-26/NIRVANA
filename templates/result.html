@@ -4,20 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Result</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('../static/bg_5_1920.jpg'); /* Add your background image path here */
+            background-size: cover;
+            background-position: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 20px; /* Add margin for better spacing */
+        }
+
+        h2, p {
+            font-size: 24px; /* Increase font size for text elements */
+        }
+
+        button {
+            margin: 10px; /* Add margin to separate buttons */
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid white;
+            border-radius: 5px;
+            background-color: transparent;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #42213D; /* Fill in on hover */
+        }
+    </style>
 </head>
 <body>
-    {% if title %}
-    <h2>Music identified:</h2>
-    <p><strong>Title:</strong> {{ title }}</p>
-    <p><strong>Artist:</strong> {{ artist }}</p>
-    <form action="/confirm" method="post">
-        <input type="hidden" name="title" value="{{ title }}">
-        <input type="hidden" name="artist" value="{{ artist }}">
-        <button type="submit" name="confirmation" value="yes">Yes</button>
-        <button type="submit" name="confirmation" value="no">No</button>
-    </form>
-    {% elif error %}
-    <p>{{ error }}</p>
-    {% endif %}
+    <div class="container">
+        {% if title %}
+        <h2>Music identified:</h2>
+        <p><strong>Title:</strong> {{ title }}</p>
+        <p><strong>Artist:</strong> {{ artist }}</p>
+        <form action="/confirm" method="post">
+            <input type="hidden" name="title" value="{{ title }}">
+            <input type="hidden" name="artist" value="{{ artist }}">
+            <button type="submit" name="confirmation" value="yes">Yes</button>
+            <button type="submit" name="confirmation" value="no">No</button>
+        </form>
+        {% elif error %}
+        <p>{{ error }}</p>
+        {% endif %}
+    </div>
 </body>
 </html>

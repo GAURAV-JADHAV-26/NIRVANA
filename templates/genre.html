@@ -53,7 +53,7 @@
             font-weight: 700; /* Font weight */
             margin: 0; /* Remove default margin */
             padding: 0; /* Remove default padding */
-            background: linear-gradient( #008DDA, #3E5776, #D895DA, #6AD4DD);
+            background-color: #F1EEDC; /* Single color background */
         }
         .container {
             display: flex;
@@ -165,13 +165,12 @@
 
                 /* Styles for the cards */
                 body {
-            background-color: #52057B; /* Dark background color */
+            background-color: #C4E4FF; /* Dark background color */
             color: #fff; /* Text color */
             font-family: "Kode Mono", monospace; /* Font family */
             font-weight: 700; /* Font weight */
             margin: 0; /* Remove default margin */
             padding: 0; /* Remove default padding */
-            background: linear-gradient(#201658,#1D24CA,#98ABEE,#38419D);
         }
         .container {
             display: flex;
@@ -428,6 +427,44 @@
         input[type="submit"]:hover {
             background-color: #1ED760; /* Keep the same green color on hover */
         }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 20%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 9999;
+        }
+
+        .search-container input[type=text] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .search-container input[type=text]:focus {
+            background-color: #1ED760;
+        }
+
+        .search-container button {
+            background-color: transparent;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .search-container button:hover {
+            background-color: #1ED760;
+        }
     </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -442,9 +479,14 @@
             <p>Music genres categorize music according to its sound, style, or theme. Genres can range from classical and jazz to rock, pop, hip-hop, and more. Explore different genres to find the music that resonates with you!</p>
         </div>
     </div>
+
     <h1 class="music-genres">AVAILABLE MUSIC GENRES</h1>
-    
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for genres...">
+        <button onclick="searchGenres()">Search</button>
+    </div>
     <form action="/select_genres" method="post">
+        
         <div class="container" >
             <!-- Cards with selectable genres and images will be dynamically generated here -->
             {% for genre in genres %}
@@ -472,6 +514,78 @@
         // Function to close the popup
         function closePopup() {
             popup.style.display = 'none';
+        }
+        function searchGenres() {
+            var input, filter, container, cards, cardContent, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            container = document.getElementsByClassName('container')[0];
+            cards = container.getElementsByClassName('card');
+            var found = false; // Flag to track if the genre is found
+            
+            // Loop through all cards and hide those that don't match the search query
+            for (i = 0; i < cards.length; i++) {
+                cardContent = cards[i].getElementsByClassName('card-content')[0];
+                txtValue = cardContent.textContent || cardContent.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    cards[i].style.display = '';
+                    found = true; // Genre found
+                } else {
+                    cards[i].style.display = 'none';
+                }
+            }
+            
+            // If the genre is not found, send it to the backend
+            if (!found && filter.trim() !== '') {
+                sendGenreToBackend(filter);
+            }
+        }
+        function sendGenreToBackend(genre) {
+            // Assuming you're using AJAX to send the genre to the backend
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/trial', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    // Handle response from the backend if needed
+                    var responseData = JSON.parse(xhr.responseText);
+                    convertToCards(responseData);
+                }
+            };
+            xhr.send(JSON.stringify({ genre: genre }));
+        }
+        
+        function convertToCards(genres) {
+            var container = document.querySelector('.container');
+        
+            // Loop through genres and create cards
+            genres.forEach(function(genre) {
+                var existingCard = container.querySelector('.card-content[data-genre="' + genre.name + '"]');
+                if (!existingCard) {  // Only create a new card if it doesn't already exist
+                    var card = document.createElement('label');
+                    card.classList.add('checkbox-container', 'card');
+                    card.style.backgroundImage = "url('" + genre.image + "')";
+        
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'checkbox');
+                    input.setAttribute('name', 'selected_genres');
+                    input.setAttribute('value', genre.name);
+                    input.style.display = 'none';
+        
+                    var checkmark = document.createElement('span');
+                    checkmark.classList.add('checkmark');
+        
+                    var cardContent = document.createElement('div');
+                    cardContent.classList.add('card-content');
+                    cardContent.setAttribute('data-genre', genre.name); // Add data attribute for genre name
+                    cardContent.textContent = genre.name;
+        
+                    card.appendChild(input);
+                    card.appendChild(checkmark);
+                    card.appendChild(cardContent);
+                    container.appendChild(card);
+                }
+            });
         }
     </script>
 </body>
