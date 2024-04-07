@@ -12,13 +12,16 @@
             padding: 0;
             overflow-x: hidden; /* Hide horizontal scrollbar */
             font-size: 1.25em;
+            
+            p {
+                color: white;
+            }
         }
     }
     .background-image {
-        background-image: url('../static/images/parameters1.jpg'); /* Replace with your high-resolution image URL */
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed; /* Fix background image position */
+        background-image: url('../static/hand-1850120_1280.jpg'); /* Replace with your high-resolution image URL */
+        background-size: cover; /* Cover the entire viewport */
+        background-position: center; /* Center the background image */
         position: fixed;
         top: 0;
         left: 0;
@@ -27,8 +30,7 @@
         z-index: -1;
     }
 
-    .card {
-        background-color: rgba(5, 255, 222, 0.35); /* Adjust the opacity if needed */
+    .card {/* Adjust the opacity if needed */
         border-radius: 10px;
         padding: 20px;
         margin: 20px auto 0; /* Adjust the top margin as needed */
@@ -293,6 +295,10 @@ button[type="submit"]:hover {
     50%,
     100% {
         bottom: 100%;
+    }
+    body,
+    p {
+        color: white;
     }
 }
 </style>

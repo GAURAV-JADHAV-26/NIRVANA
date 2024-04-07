@@ -467,17 +467,19 @@ def music_by_music():
         recording, samplerate = record_audio(duration)
         save_audio(recording, filename, samplerate)
 
-        # Use asyncio.run to await the asynchronous function
-        track = asyncio.run(identify_music(filename))
-
-        if track:
-            title = track['track']['title']
-            artist = track['track']['subtitle']
+        try:
+            # Use asyncio.run to await the asynchronous function
+            track = asyncio.run(identify_music(filename))
+            if track:
+                title = track['track']['title']
+                artist = track['track']['subtitle']
+                os.remove(filename)
+                return render_template('result.html', title=title, artist=artist)
+            else:
+                raise Exception("Track not identified")
+        except Exception as e:
             os.remove(filename)
-            return render_template('result.html', title=title, artist=artist)
-        else:
-            os.remove(filename)
-            return render_template('result.html', error="Could not identify music.")
+            return render_template('music_by_music.html', error="Could not identify music, Please try again.")
 
     return render_template('music_by_music.html')
 @app.route('/confirm', methods=['POST'])

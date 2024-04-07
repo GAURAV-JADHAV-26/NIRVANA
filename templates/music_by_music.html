@@ -53,6 +53,11 @@
             animation: fadeIn 2s forwards; /* Fade in animation */
         }
 
+        .error {
+            font-size: 24px; /* Increase font size for error message */
+            margin-top: 20px; /* Add margin */
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -68,7 +73,11 @@
     <form method="post" enctype="multipart/form-data">
         <input type="submit" value="Identify Music" onclick="displayListening()">
     </form>
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% else %}
     <p class="description">We will recognize your music and recommend similar music.</p>
+    {% endif %}
     <script>
         function displayListening() {
             document.querySelector('.description').innerHTML = 'Listening Now...';

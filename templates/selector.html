@@ -8,7 +8,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-image: url('../static/band-of-musicians-8.jpg'); /* Add your background image path here */
+            background-image: url('../static/images/Untitled design.png'); /* Add your background image path here */
             background-size: cover;
             background-position: center;
             height: 100vh;
@@ -16,35 +16,63 @@
             justify-content: center;
             align-items: center;
         }
+        
         .container {
             display: flex;
             flex-direction: row; /* Change flex direction to row */
             justify-content: center;
             align-items: center;
         }
+        
         .button {
             margin: 10px;
             padding: 10px 0; /* Adjust vertical padding */
             font-size: 20px; /* Increase font size */
             font-weight: bold; /* Increase font thickness */
-            border: 4px solid white; /* Add permanent border */
-            border-radius: 5px;
+            border: 2px solid white; /* Decrease border thickness */
+            border-radius: 20px; /* Make corners curved */
             background-color: transparent; /* Make background transparent initially */
             color: white;
             cursor: pointer;
             transition: all 0.3s ease; /* Add smooth transition */
             text-align: center; /* Center text */
+            position: relative; /* Add relative positioning */
         }
+        
+        .button::after {
+            content: attr(data-description); /* Display description from data-description attribute */
+            position: absolute; /* Position the description */
+            top: 100%; /* Place it below the button */
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Center horizontally */
+            padding: 10px; /* Add padding */
+            background-color: rgba(0, 0, 0, 0.8); /* Background color for description */
+            color: white; /* Text color for description */
+            border-radius: 5px; /* Rounded corners */
+            opacity: 0; /* Initially hidden */
+            transition: opacity 0.3s ease; /* Add smooth transition */
+        }
+        
         .button-long {
             width: 300px; /* Increase width for long button */
             height: 75px;
         }
+        
         .button-short {
             width: 300px; /* Decrease width for short button */
         }
+        
         .button:hover {
-            background-color: rgba(0, 123, 255, 0.5); /* Add transparent background color on hover */
-            border-color: #007bff;
+            background-color: #FF5BAE; /* Add transparent background color on hover */
+            border-color: #FFF7FC;
+            transform: scale(1.05); /* Increase dimensions on hover */
+        }
+        
+        @media (max-width: 600px) {
+            .button-long,
+            .button-short {
+                width: 250px; /* Adjust width for smaller screens */
+            }
         }
     </style>
 </head>
